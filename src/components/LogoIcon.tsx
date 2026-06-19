@@ -1,0 +1,16 @@
+import React from 'react';
+
+export const LogoIcon: React.FC = () => (
+  <svg className="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 5L90 28.5V71.5L50 95L10 71.5V28.5L50 5Z" fill="url(#logo-grad)" stroke="#ffffff" strokeWidth="2"/>
+    <path d="M30 45C30 35 40 30 50 30C60 30 70 35 70 45C70 52 65 55 58 58C52 61 50 63 50 68" stroke="#ffffff" strokeWidth="6" strokeLinecap="round"/>
+    <rect x="46" y="74" width="8" height="8" rx="2" fill="#00f0ff" />
+    <defs>
+      <linearGradient id="logo-grad" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#ff5e00" />
+        <stop offset="0.5" stopColor="#ff007f" />
+        <stop offset="1" stopColor="#00f0ff" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
