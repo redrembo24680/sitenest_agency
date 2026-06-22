@@ -63,7 +63,11 @@ export const Blog: React.FC<BlogProps> = ({ navigateTo }) => {
               onClick={() => navigateTo(post.id)}
             >
               <div className="blog-card-img">
-                <MemberAvatar colorClass={post.id} devType={post.category} />
+                {post.image ? (
+                  <img src={post.image} alt={post.title} className="blog-cover-img" />
+                ) : (
+                  <MemberAvatar colorClass={post.id} devType={post.category} />
+                )}
               </div>
               <div className="blog-meta">
                 <span className="blog-cat">{post.category.toUpperCase()}</span>

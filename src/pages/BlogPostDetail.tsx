@@ -48,7 +48,11 @@ export const BlogPostDetail: React.FC<BlogPostDetailProps> = ({ postId, navigate
         </div>
 
         <div className="post-cover-image">
-          <MemberAvatar colorClass={post.id} devType={post.category} />
+          {post.image ? (
+            <img src={post.image} alt={post.title} className="blog-cover-img-full" />
+          ) : (
+            <MemberAvatar colorClass={post.id} devType={post.category} />
+          )}
         </div>
 
         <div className="post-grid">
