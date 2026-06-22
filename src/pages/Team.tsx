@@ -29,7 +29,11 @@ export const Team: React.FC = () => {
             >
               <div className="team-card-inner">
                 <div className="team-img-wrapper">
-                  <MemberAvatar colorClass={member.id} devType={member.avatarId} />
+                  {member.image ? (
+                    <img src={member.image} alt={member.name} className="team-member-img" />
+                  ) : (
+                    <MemberAvatar colorClass={member.id} devType={member.avatarId} />
+                  )}
                 </div>
                 <div className="team-card-info">
                   <div>
@@ -57,7 +61,11 @@ export const Team: React.FC = () => {
             </button>
             <div className="modal-body-grid">
               <div className="modal-left">
-                <MemberAvatar colorClass={selectedMember.id} devType={selectedMember.avatarId} />
+                {selectedMember.image ? (
+                  <img src={selectedMember.image} alt={selectedMember.name} className="team-member-img-full" />
+                ) : (
+                  <MemberAvatar colorClass={selectedMember.id} devType={selectedMember.avatarId} />
+                )}
               </div>
               <div className="modal-right">
                 <h2>{selectedMember.name}</h2>

@@ -11,6 +11,7 @@ export interface TeamMember {
   bio: string;
   miniSkills: string[];
   skills: Skill[];
+  image?: string;
 }
 
 export interface BlogPost {
@@ -22,6 +23,7 @@ export interface BlogPost {
   author: string;
   summary: string;
   content: string;
+  image?: string;
 }
 
 export interface PortfolioProject {
