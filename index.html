@@ -53,7 +53,7 @@
     <!-- Theme color for browser UI -->
     <meta name="theme-color" content="#05060b" />
 
-    <!-- Preload critical font stylesheet -->
+    <!-- Non-blocking font load with display=swap to prevent FOIT -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" /></noscript>
 

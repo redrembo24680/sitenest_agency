@@ -60,6 +60,11 @@ body {
   position: relative;
 }
 
+/* Spinner for Suspense fallback */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -139,19 +144,21 @@ input, textarea, select, button {
 
 /* --- AMBIENT BACKGROUND GLOW ORBS --- */
 .glow-orb {
-  position: absolute;
+  /* fixed = own compositor layer, no layout reflow */
+  position: fixed;
   width: 45vw;
   height: 45vw;
   max-width: 500px;
   max-height: 500px;
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(100px);
   z-index: 0;
-  opacity: 0.08;
+  opacity: 0.07;
   pointer-events: none;
-  animation: floatOrb 25s infinite alternate ease-in-out;
+  /* Only animate transform — GPU composited, no layout/paint */
   will-change: transform;
   transform: translateZ(0);
+  animation: floatOrb 30s infinite alternate ease-in-out;
 }
 
 .glow-orb-1 {
@@ -195,6 +202,8 @@ input, textarea, select, button {
   background-position: center center;
   z-index: 0;
   pointer-events: none;
+  /* Paint containment — browser won't repaint outside this element */
+  contain: strict;
 }
 
 /* --- GLASSMORPHISM CARD COMMON --- */

@@ -1,20 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Mail, MapPin, Globe } from 'lucide-react';
 
 // Components
 import { LogoIcon } from './components/LogoIcon';
 
-// Pages
-import { Home } from './pages/Home';
-import { Services } from './pages/Services';
-import { Team } from './pages/Team';
-import { Blog } from './pages/Blog';
-import { BlogPostDetail } from './pages/BlogPostDetail';
-import { Contact } from './pages/Contact';
-import { Process } from './pages/Process';
-import { Portfolio } from './pages/Portfolio';
-import { ServiceDetail } from './pages/ServiceDetail';
+// Pages — lazy loaded for code splitting (reduces TBT significantly)
+const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
+const Services = lazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
+const Team = lazy(() => import('./pages/Team').then(m => ({ default: m.Team })));
+const Blog = lazy(() => import('./pages/Blog').then(m => ({ default: m.Blog })));
+const BlogPostDetail = lazy(() => import('./pages/BlogPostDetail').then(m => ({ default: m.BlogPostDetail })));
+const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
+const Process = lazy(() => import('./pages/Process').then(m => ({ default: m.Process })));
+const Portfolio = lazy(() => import('./pages/Portfolio').then(m => ({ default: m.Portfolio })));
+const ServiceDetail = lazy(() => import('./pages/ServiceDetail').then(m => ({ default: m.ServiceDetail })));
+
+// Page loading fallback
+const PageFallback = () => (
+  <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ width: 40, height: 40, border: '3px solid rgba(255,255,255,0.08)', borderTopColor: '#00f0ff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+  </div>
+);
 
 // Mock Data
 import { BLOG_POSTS } from './data/mockData';
@@ -281,41 +288,43 @@ export default function App() {
 
       {/* MAIN CONTENT AREA */}
       <main style={{ minHeight: '80vh', opacity: pageTransitioning ? 0 : 1, transition: 'opacity 0.15s ease' }}>
-        <Routes>
-          <Route path="/" element={<Home navigateTo={navigateTo} portfolioFilter={portfolioFilter} setPortfolioFilter={setPortfolioFilter} />} />
-          <Route path="/services" element={
-            <Services
-              navigateTo={navigateTo}
-              calcType={calcType}
-              setCalcType={setCalcType}
-              calcPages={calcPages}
-              setCalcPages={setCalcPages}
-              calcDevops={calcDevops}
-              setCalcDevops={setCalcDevops}
-              calcSmm={calcSmm}
-              setCalcSmm={setCalcSmm}
-              calcApi={calcApi}
-              setCalcApi={setCalcApi}
-              animatedPrice={animatedPrice}
-            />
-          } />
-          <Route path="/team" element={<Team />} />
-          <Route path="/blog" element={<Blog navigateTo={navigateTo} />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/process" element={<Process />} />
-          <Route path="/portfolio" element={<Portfolio navigateTo={navigateTo} />} />
-          
-          <Route path="/service-frontend" element={<ServiceDetail serviceId="frontend" navigateTo={navigateTo} />} />
-          <Route path="/service-backend" element={<ServiceDetail serviceId="backend" navigateTo={navigateTo} />} />
-          <Route path="/service-devops" element={<ServiceDetail serviceId="devops" navigateTo={navigateTo} />} />
-          <Route path="/service-smm" element={<ServiceDetail serviceId="smm" navigateTo={navigateTo} />} />
+        <Suspense fallback={<PageFallback />}>
+          <Routes>
+            <Route path="/" element={<Home navigateTo={navigateTo} portfolioFilter={portfolioFilter} setPortfolioFilter={setPortfolioFilter} />} />
+            <Route path="/services" element={
+              <Services
+                navigateTo={navigateTo}
+                calcType={calcType}
+                setCalcType={setCalcType}
+                calcPages={calcPages}
+                setCalcPages={setCalcPages}
+                calcDevops={calcDevops}
+                setCalcDevops={setCalcDevops}
+                calcSmm={calcSmm}
+                setCalcSmm={setCalcSmm}
+                calcApi={calcApi}
+                setCalcApi={setCalcApi}
+                animatedPrice={animatedPrice}
+              />
+            } />
+            <Route path="/team" element={<Team />} />
+            <Route path="/blog" element={<Blog navigateTo={navigateTo} />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/process" element={<Process />} />
+            <Route path="/portfolio" element={<Portfolio navigateTo={navigateTo} />} />
+            
+            <Route path="/service-frontend" element={<ServiceDetail serviceId="frontend" navigateTo={navigateTo} />} />
+            <Route path="/service-backend" element={<ServiceDetail serviceId="backend" navigateTo={navigateTo} />} />
+            <Route path="/service-devops" element={<ServiceDetail serviceId="devops" navigateTo={navigateTo} />} />
+            <Route path="/service-smm" element={<ServiceDetail serviceId="smm" navigateTo={navigateTo} />} />
 
-          {BLOG_POSTS.map(post => (
-            <Route key={post.id} path={`/${post.id}`} element={<BlogPostDetail postId={post.id} navigateTo={navigateTo} />} />
-          ))}
+            {BLOG_POSTS.map(post => (
+              <Route key={post.id} path={`/${post.id}`} element={<BlogPostDetail postId={post.id} navigateTo={navigateTo} />} />
+            ))}
 
-          <Route path="*" element={<Home navigateTo={navigateTo} portfolioFilter={portfolioFilter} setPortfolioFilter={setPortfolioFilter} />} />
-        </Routes>
+            <Route path="*" element={<Home navigateTo={navigateTo} portfolioFilter={portfolioFilter} setPortfolioFilter={setPortfolioFilter} />} />
+          </Routes>
+        </Suspense>
       </main>
 
       {/* FOOTER */}
