@@ -97,16 +97,16 @@ export const Home: React.FC<HomeProps> = ({ navigateTo, portfolioFilter, setPort
               <div className="nest-center">
                 <LogoIcon />
               </div>
-              <div className="floating-node node-1" title="Front-end UI">
+              <div className="floating-node node-1" aria-hidden="true">
                 <Code className="node-icon" />
               </div>
-              <div className="floating-node node-2" title="Back-end API">
+              <div className="floating-node node-2" aria-hidden="true">
                 <Server className="node-icon" />
               </div>
-              <div className="floating-node node-3" title="DevOps Cloud">
+              <div className="floating-node node-3" aria-hidden="true">
                 <Cpu className="node-icon" />
               </div>
-              <div className="floating-node node-4" title="SMM Growth">
+              <div className="floating-node node-4" aria-hidden="true">
                 <TrendingUp className="node-icon" />
               </div>
             </div>
@@ -209,16 +209,22 @@ export const Home: React.FC<HomeProps> = ({ navigateTo, portfolioFilter, setPort
 
           <div className="portfolio-grid">
             {PORTFOLIO_PROJECTS.filter(p => portfolioFilter === 'all' || p.cat === portfolioFilter).map((project, i) => (
-              <div className="portfolio-item" key={i}>
-                <img className="portfolio-img" src={project.img} alt={project.title} />
-                <div className="portfolio-overlay">
+              <a
+                className="portfolio-item"
+                key={i}
+                href="/portfolio"
+                onClick={(e) => { e.preventDefault(); navigateTo('portfolio'); }}
+                aria-label={`Переглянути проект: ${project.title}`}
+              >
+                <img className="portfolio-img" src={project.img} alt={project.title} loading="lazy" />
+                <div className="portfolio-overlay" aria-hidden="true">
                   <span className="portfolio-cat">{project.catLabel}</span>
-                  <h4 className="portfolio-title">{project.title}</h4>
-                  <span className="portfolio-link" onClick={() => navigateTo('portfolio')}>
+                  <h3 className="portfolio-title">{project.title}</h3>
+                  <span className="portfolio-link">
                     {t.home.viewCase} <ChevronRight className="btn-icon" />
                   </span>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>

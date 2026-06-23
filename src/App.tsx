@@ -222,18 +222,20 @@ export default function App() {
       <header className={headerScrolled ? 'scrolled' : ''}>
         <div className="container">
           <div className="nav-container">
-            <div className="logo" onClick={() => navigateTo('home')}>
+            <div className="logo" role="link" tabIndex={0} aria-label="SiteNest Agency - На головну" onClick={() => navigateTo('home')} onKeyDown={(e) => e.key === 'Enter' && navigateTo('home')}>
               <LogoIcon />
               <div className="logo-text">sitenest<span>_agency</span></div>
             </div>
 
-            <nav>
+            <nav aria-label="Головна навігація">
               <ul className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
                 {NAV_ITEMS.map(({ key, label }) => (
                   <li key={key}>
                     <a
+                      href={key === 'home' ? '/' : `/${key}`}
                       className={currentPage === key || (key === 'blog' && currentPage.startsWith('blog-post-')) ? 'active' : ''}
-                      onClick={() => navigateTo(key)}
+                      onClick={(e) => { e.preventDefault(); navigateTo(key); }}
+                      aria-current={currentPage === key ? 'page' : undefined}
                     >
                       {label}
                     </a>
@@ -270,7 +272,7 @@ export default function App() {
               {t.nav.orderProject}
             </button>
 
-            <button className="menu-toggle" type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <button className="menu-toggle" type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label={mobileMenuOpen ? 'Закрити меню' : 'Відкрити меню'} aria-expanded={mobileMenuOpen}>
               {mobileMenuOpen ? <X style={{ color: '#fff' }} /> : <Menu style={{ color: '#fff' }} />}
             </button>
           </div>
@@ -320,38 +322,38 @@ export default function App() {
       <footer>
         <div className="container footer-grid">
           <div className="footer-brand">
-            <div className="logo" onClick={() => navigateTo('home')}>
+            <div className="logo" role="link" tabIndex={0} aria-label="SiteNest Agency - На головну" onClick={() => navigateTo('home')} onKeyDown={(e) => e.key === 'Enter' && navigateTo('home')}>
               <LogoIcon />
               <div className="logo-text">sitenest<span>_agency</span></div>
             </div>
             <p>{t.footer.tagline}</p>
             <div className="footer-socials">
-              <a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" className="social-icon">
-                <svg style={{ width: '18px', height: '18px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              <a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="SiteNest Agency в Instagram">
+                <svg style={{ width: '18px', height: '18px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
-              <a href="mailto:sitenest.ua@gmail.com" className="social-icon"><Mail style={{ width: '18px', height: '18px' }} /></a>
+              <a href="mailto:sitenest.ua@gmail.com" className="social-icon" aria-label="Написати на email sitenest.ua@gmail.com"><Mail style={{ width: '18px', height: '18px' }} aria-hidden="true" /></a>
             </div>
           </div>
 
           <div className="footer-column">
             <h4>{t.footer.navigation}</h4>
             <ul className="footer-links">
-              <li><a onClick={() => navigateTo('home')}>{t.nav.home}</a></li>
-              <li><a onClick={() => navigateTo('services')}>{t.nav.services}</a></li>
-              <li><a onClick={() => navigateTo('process')}>{t.nav.process}</a></li>
-              <li><a onClick={() => navigateTo('portfolio')}>{t.nav.portfolio}</a></li>
-              <li><a onClick={() => navigateTo('team')}>{t.nav.team}</a></li>
-              <li><a onClick={() => navigateTo('blog')}>{t.nav.blog}</a></li>
+              <li><a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home'); }}>{t.nav.home}</a></li>
+              <li><a href="/services" onClick={(e) => { e.preventDefault(); navigateTo('services'); }}>{t.nav.services}</a></li>
+              <li><a href="/process" onClick={(e) => { e.preventDefault(); navigateTo('process'); }}>{t.nav.process}</a></li>
+              <li><a href="/portfolio" onClick={(e) => { e.preventDefault(); navigateTo('portfolio'); }}>{t.nav.portfolio}</a></li>
+              <li><a href="/team" onClick={(e) => { e.preventDefault(); navigateTo('team'); }}>{t.nav.team}</a></li>
+              <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigateTo('blog'); }}>{t.nav.blog}</a></li>
             </ul>
           </div>
 
           <div className="footer-column">
             <h4>{t.footer.services}</h4>
             <ul className="footer-links">
-              <li><a onClick={() => navigateTo('services')}>Front-end</a></li>
-              <li><a onClick={() => navigateTo('services')}>Back-end</a></li>
-              <li><a onClick={() => navigateTo('services')}>DevOps</a></li>
-              <li><a onClick={() => navigateTo('services')}>SMM & SEO</a></li>
+              <li><a href="/service-frontend" onClick={(e) => { e.preventDefault(); navigateTo('service-frontend'); }}>Front-end</a></li>
+              <li><a href="/service-backend" onClick={(e) => { e.preventDefault(); navigateTo('service-backend'); }}>Back-end</a></li>
+              <li><a href="/service-devops" onClick={(e) => { e.preventDefault(); navigateTo('service-devops'); }}>DevOps</a></li>
+              <li><a href="/service-smm" onClick={(e) => { e.preventDefault(); navigateTo('service-smm'); }}>SMM & SEO</a></li>
             </ul>
           </div>
 

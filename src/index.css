@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+/* Fonts loaded via <link preload> in index.html — no blocking @import needed */
 
 /* --- DESIGN SYSTEM & CONSTANTS --- */
 :root {
@@ -34,8 +34,8 @@
   --shadow-glow-blue: 0 0 15px rgba(0, 240, 255, 0.3);
 
   /* Text Colors */
-  --text-slate: #94a3b8;
-  --text-dim: #64748b;
+  --text-slate: #94a3b8;  /* ~5.3:1 contrast on dark bg */
+  --text-dim: #8899aa;    /* ~4.6:1 contrast on dark bg - was #64748b (3:1 - too low) */
 }
 
 /* --- RESET & GLOBAL STYLES --- */
@@ -150,6 +150,8 @@ input, textarea, select, button {
   opacity: 0.08;
   pointer-events: none;
   animation: floatOrb 25s infinite alternate ease-in-out;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .glow-orb-1 {
@@ -349,6 +351,10 @@ header .nav-container {
   gap: 5px;
   cursor: pointer;
   z-index: 1001;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-toggle span {
@@ -533,6 +539,7 @@ header .nav-container {
   left: 50%;
   transform: translate(-50%, -50%);
   animation: spinRing 40s infinite linear;
+  will-change: transform;
 }
 
 .ring-1 { width: 100%; height: 100%; animation-duration: 50s; }
@@ -731,7 +738,8 @@ header .nav-container {
 }
 
 .portfolio-tab {
-  padding: 0.45rem 1.35rem;
+  padding: 0.6rem 1.35rem;
+  min-height: 44px;
   border-radius: 50px;
   font-family: var(--font-title);
   font-size: 0.85rem;
@@ -901,8 +909,8 @@ footer {
 }
 
 .social-icon {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -3038,3 +3046,32 @@ footer {
   .portfolio-modal-content { width: 95%; max-height: 95vh; }
 }
 
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .glow-orb, .nest-ring, .floating-node, .hero-badge-dot {
+    animation: none !important;
+  }
+}
+
+/* Focus visible outlines for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+}
