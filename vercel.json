@@ -24,7 +24,19 @@
       ]
     },
     {
-      "source": "/(.*\\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf|eot))",
+      "source": "/portfolio_mockups/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/team_images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/blog_images/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
