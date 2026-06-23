@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://sitenest.agency/sitemap.xml
+Sitemap: https://sitenest.work/sitemap.xml
 
 # Crawl-delay for politeness (optional)
 Crawl-delay: 1

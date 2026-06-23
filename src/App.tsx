@@ -72,14 +72,14 @@ export default function App() {
     let desc = lang === 'uk'
       ? 'SiteNest Agency — веб-агенція з Львова. Розробляємо швидкі, адаптивні сайти під ключ: Front-end, Back-end, DevOps та SMM просування.'
       : 'SiteNest Agency — web agency from Lviv. We build fast, responsive websites: Front-end, Back-end, DevOps and SMM.';
-    let canonical = 'https://sitenest.agency/';
+    let canonical = 'https://sitenest.work/';
 
     if (currentPage === 'services') {
       title = lang === 'uk' ? 'Послуги та Калькулятор Вартості | SiteNest Agency' : 'Services & Price Calculator | SiteNest Agency';
       desc = lang === 'uk'
         ? 'Дізнайтесь вартість вашого сайту за допомогою інтерактивного калькулятора. Front-end, Back-end, DevOps, SMM — обираємо разом.'
         : 'Find out your website cost using our interactive calculator. Front-end, Back-end, DevOps, SMM — choose together.';
-      canonical = 'https://sitenest.agency/services';
+      canonical = 'https://sitenest.work/services';
     } else if (currentPage.startsWith('service-')) {
       const serviceKey = currentPage.replace('service-', '') as 'frontend' | 'backend' | 'devops' | 'smm';
       const serviceName = lang === 'uk'
@@ -89,44 +89,44 @@ export default function App() {
       desc = lang === 'uk'
         ? `Професійні послуги ${serviceName} від SiteNest Agency — команди з Львова. Швидко, якісно, в строк.`
         : `Professional ${serviceName} services by SiteNest Agency — a team from Lviv, Ukraine.`;
-      canonical = `https://sitenest.agency/${currentPage}`;
+      canonical = `https://sitenest.work/${currentPage}`;
     } else if (currentPage === 'team') {
       title = lang === 'uk' ? 'Наша Команда | Фахівці SiteNest Agency' : 'Our Team | SiteNest Agency Specialists';
       desc = lang === 'uk'
         ? 'Познайомтесь із командою SiteNest Agency — 4 фахівці: Front-end, Back-end, DevOps та SMM.'
         : 'Meet the SiteNest Agency team — 4 specialists: Front-end, Back-end, DevOps and SMM.';
-      canonical = 'https://sitenest.agency/team';
+      canonical = 'https://sitenest.work/team';
     } else if (currentPage === 'blog') {
       title = lang === 'uk' ? 'Блог про Веб-розробку та SEO | SiteNest Agency' : 'Web Development & SEO Blog | SiteNest Agency';
       desc = lang === 'uk'
         ? 'Корисні статті про веб-розробку, SEO, швидкодію сайту та бекенд-архітектуру від команди SiteNest.'
         : 'Useful articles about web development, SEO, site performance and backend architecture from SiteNest team.';
-      canonical = 'https://sitenest.agency/blog';
+      canonical = 'https://sitenest.work/blog';
     } else if (currentPage.startsWith('blog-post-')) {
       const post = BLOG_POSTS.find(p => p.id === currentPage);
       if (post) {
         title = `${post.title} | SiteNest Blog`;
         desc = post.summary;
       }
-      canonical = `https://sitenest.agency/${currentPage}`;
+      canonical = `https://sitenest.work/${currentPage}`;
     } else if (currentPage === 'contact') {
       title = lang === 'uk' ? 'Контакти | Замовити Сайт | SiteNest Agency' : 'Contact | Order a Website | SiteNest Agency';
       desc = lang === 'uk'
         ? 'Зв\'яжіться з SiteNest Agency для замовлення сайту. Email: sitenest.ua@gmail.com. Відповімо протягом 24 годин.'
         : 'Contact SiteNest Agency to order a website. Email: sitenest.ua@gmail.com. We reply within 24 hours.';
-      canonical = 'https://sitenest.agency/contact';
+      canonical = 'https://sitenest.work/contact';
     } else if (currentPage === 'process') {
       title = lang === 'uk' ? 'Процес Розробки Сайту | SiteNest Agency' : 'Website Development Process | SiteNest Agency';
       desc = lang === 'uk'
         ? 'Як ми розробляємо сайти — від брифу до релізу. Прозора методологія, фіксовані строки та постійна комунікація.'
         : 'How we build websites — from brief to launch. Transparent methodology, fixed deadlines and constant communication.';
-      canonical = 'https://sitenest.agency/process';
+      canonical = 'https://sitenest.work/process';
     } else if (currentPage === 'portfolio') {
       title = lang === 'uk' ? 'Портфоліо | Наші Проекти | SiteNest Agency' : 'Portfolio | Our Projects | SiteNest Agency';
       desc = lang === 'uk'
         ? 'Реальні кейси та проекти команди SiteNest Agency. Перегляньте наші роботи та оцініть якість.'
         : 'Real case studies and projects by the SiteNest Agency team. Review our work and assess the quality.';
-      canonical = 'https://sitenest.agency/portfolio';
+      canonical = 'https://sitenest.work/portfolio';
     }
 
     document.title = title;

@@ -4,17 +4,17 @@
 
   <!-- Home -->
   <url>
-    <loc>https://sitenest.agency/</loc>
+    <loc>https://sitenest.work/</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="uk" href="https://sitenest.agency/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://sitenest.agency/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://sitenest.work/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sitenest.work/"/>
   </url>
 
   <!-- Services -->
   <url>
-    <loc>https://sitenest.agency/services</loc>
+    <loc>https://sitenest.work/services</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -22,25 +22,25 @@
 
   <!-- Service Detail Pages -->
   <url>
-    <loc>https://sitenest.agency/service-frontend</loc>
+    <loc>https://sitenest.work/service-frontend</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sitenest.agency/service-backend</loc>
+    <loc>https://sitenest.work/service-backend</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sitenest.agency/service-devops</loc>
+    <loc>https://sitenest.work/service-devops</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sitenest.agency/service-smm</loc>
+    <loc>https://sitenest.work/service-smm</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -48,7 +48,7 @@
 
   <!-- Process -->
   <url>
-    <loc>https://sitenest.agency/process</loc>
+    <loc>https://sitenest.work/process</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -56,7 +56,7 @@
 
   <!-- Portfolio -->
   <url>
-    <loc>https://sitenest.agency/portfolio</loc>
+    <loc>https://sitenest.work/portfolio</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -64,7 +64,7 @@
 
   <!-- Team -->
   <url>
-    <loc>https://sitenest.agency/team</loc>
+    <loc>https://sitenest.work/team</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -72,7 +72,7 @@
 
   <!-- Blog -->
   <url>
-    <loc>https://sitenest.agency/blog</loc>
+    <loc>https://sitenest.work/blog</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -80,19 +80,19 @@
 
   <!-- Blog Posts -->
   <url>
-    <loc>https://sitenest.agency/blog-post-1</loc>
+    <loc>https://sitenest.work/blog-post-1</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://sitenest.agency/blog-post-2</loc>
+    <loc>https://sitenest.work/blog-post-2</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://sitenest.agency/blog-post-3</loc>
+    <loc>https://sitenest.work/blog-post-3</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -100,7 +100,7 @@
 
   <!-- Contact -->
   <url>
-    <loc>https://sitenest.agency/contact</loc>
+    <loc>https://sitenest.work/contact</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
