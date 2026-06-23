@@ -53,7 +53,7 @@ export default function App() {
     setPageTransitioning(true);
     setMobileMenuOpen(false);
     setLangOpen(false);
-    window.scrollTo({ top: 0, behavior: 'instant' as any });
+    window.scrollTo({ top: 0, behavior: 'auto' });
     
     setTimeout(() => {
       navigate(page === 'home' ? '/' : `/${page}`);
@@ -182,8 +182,8 @@ export default function App() {
 
     const total = base + pageCost + addonsCost;
     
-    let start = animatedPrice;
-    let end = total;
+    const start = animatedPrice;
+    const end = total;
     if (start === end) return;
 
     let current = start;
