@@ -983,11 +983,17 @@ footer {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  /* Reserve min-height to prevent CLS when icons load */
+  min-height: 1.4rem;
 }
 
-.footer-contacts p svg {
+.footer-contacts p svg,
+.footer-contacts p .lucide {
   width: 16px;
   height: 16px;
+  /* Explicit dimensions prevent CLS from icon pop-in */
+  min-width: 16px;
+  min-height: 16px;
   color: var(--color-blue);
   flex-shrink: 0;
 }

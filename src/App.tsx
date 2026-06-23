@@ -5,8 +5,11 @@ import { Menu, X, Mail, MapPin, Globe } from 'lucide-react';
 // Components
 import { LogoIcon } from './components/LogoIcon';
 
-// Pages — lazy loaded for code splitting (reduces TBT significantly)
-const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
+// Home is EAGER — landing page must render on first visit without Suspense delay
+// (lazy Home caused SI regression: 3.1s → 4.4s)
+import { Home } from './pages/Home';
+
+// All other pages are lazy — only loaded when navigated to
 const Services = lazy(() => import('./pages/Services').then(m => ({ default: m.Services })));
 const Team = lazy(() => import('./pages/Team').then(m => ({ default: m.Team })));
 const Blog = lazy(() => import('./pages/Blog').then(m => ({ default: m.Blog })));
@@ -16,10 +19,10 @@ const Process = lazy(() => import('./pages/Process').then(m => ({ default: m.Pro
 const Portfolio = lazy(() => import('./pages/Portfolio').then(m => ({ default: m.Portfolio })));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail').then(m => ({ default: m.ServiceDetail })));
 
-// Page loading fallback
+// Spinner shown only during page NAVIGATION (never on first load)
 const PageFallback = () => (
   <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <div style={{ width: 40, height: 40, border: '3px solid rgba(255,255,255,0.08)', borderTopColor: '#00f0ff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+    <div style={{ width: 36, height: 36, border: '3px solid rgba(255,255,255,0.08)', borderTopColor: '#00f0ff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
   </div>
 );
 
