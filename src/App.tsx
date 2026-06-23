@@ -280,10 +280,10 @@ export default function App() {
             </div>
             <p>{t.footer.tagline}</p>
             <div className="footer-socials">
-              <span className="social-icon">
+              <a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" className="social-icon">
                 <svg style={{ width: '18px', height: '18px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              </span>
-              <span className="social-icon"><Mail style={{ width: '18px', height: '18px' }} /></span>
+              </a>
+              <a href="mailto:sitenest.ua@gmail.com" className="social-icon"><Mail style={{ width: '18px', height: '18px' }} /></a>
             </div>
           </div>
 
@@ -311,12 +311,12 @@ export default function App() {
 
           <div className="footer-column footer-contacts">
             <h4>{t.footer.contacts}</h4>
-            <p><Mail /> hello@sitenest.agency</p>
+            <p><Mail /> <a href="mailto:sitenest.ua@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>sitenest.ua@gmail.com</a></p>
             <p>
               <svg style={{ width: '16px', height: '16px', marginRight: '8px', verticalAlign: 'middle', display: 'inline-block' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              @sitenest_agency
+              <a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@sitenest_agency</a>
             </p>
-            <p><MapPin /> {lang === 'uk' ? 'Київ, Україна' : 'Kyiv, Ukraine'}</p>
+            <p><MapPin /> {lang === 'uk' ? 'Львів, Україна' : 'Lviv, Ukraine'}</p>
           </div>
         </div>
 
