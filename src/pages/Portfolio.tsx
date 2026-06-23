@@ -109,6 +109,9 @@ export const Portfolio: React.FC<PortfolioProps> = ({ navigateTo }) => {
                     src={project.img}
                     alt={project.title}
                     className="portfolio-extended-img"
+                    loading="lazy"
+                    width="600"
+                    height="400"
                   />
                   <span className="portfolio-cat portfolio-cat-badge">{project.catLabel}</span>
                 </div>
@@ -150,17 +153,22 @@ export const Portfolio: React.FC<PortfolioProps> = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* DETAIL MODAL */}
       {selected && (
-        <div className="team-details-modal active" onClick={() => setSelected(null)}>
+        <div
+          className="team-details-modal active"
+          onClick={() => setSelected(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={selected.title}
+        >
           <div
             className="glass-card portfolio-modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <button className="modal-close" type="button" onClick={() => setSelected(null)}>
-              <X />
+            <button className="modal-close" type="button" onClick={() => setSelected(null)} aria-label="Закрити модальне вікно">
+              <X aria-hidden="true" />
             </button>
-            <img src={selected.img} alt={selected.title} className="portfolio-modal-img" />
+            <img src={selected.img} alt={selected.title} className="portfolio-modal-img" loading="lazy" />
             <div className="portfolio-modal-body">
               <span className="portfolio-cat">{selected.catLabel}</span>
               <h2>{selected.title}</h2>
@@ -168,20 +176,20 @@ export const Portfolio: React.FC<PortfolioProps> = ({ navigateTo }) => {
                 {lang === 'uk' ? selected.description : selected.descriptionEn}
               </p>
 
-              <h4 style={{ marginBottom: '0.75rem' }}>{t.portfolio.technologies}</h4>
+              <h3 style={{ marginBottom: '0.75rem' }}>{t.portfolio.technologies}</h3>
               <div className="tech-tags" style={{ marginBottom: '1.75rem' }}>
                 {selected.technologies.map((tech, i) => (
                   <span className="tech-tag" key={i}>{tech}</span>
                 ))}
               </div>
 
-              <h4 style={{ marginBottom: '0.75rem' }}>{t.portfolio.results}</h4>
+              <h3 style={{ marginBottom: '0.75rem' }}>{t.portfolio.results}</h3>
               <div className="portfolio-extended-results" style={{ marginBottom: '2rem' }}>
                 {selected.results.map((res, ri) => {
                   const Icon = RESULT_ICONS[ri % RESULT_ICONS.length];
                   return (
                     <div className="port-result" key={ri}>
-                      <Icon className="port-result-icon" />
+                      <Icon className="port-result-icon" aria-hidden="true" />
                       <div>
                         <div className="port-result-value">{res.value}</div>
                         <div className="port-result-label">{lang === 'uk' ? res.label : res.labelEn}</div>
@@ -191,7 +199,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ navigateTo }) => {
                 })}
               </div>
               <button className="btn btn-primary" type="button" onClick={() => { setSelected(null); navigateTo('contact'); }}>
-                {t.portfolio.orderSimilar} <ChevronRight className="btn-icon" />
+                {t.portfolio.orderSimilar} <ChevronRight className="btn-icon" aria-hidden="true" />
               </button>
             </div>
           </div>

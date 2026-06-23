@@ -50,25 +50,25 @@ export const Contact: React.FC = () => {
             
             <div className="contact-details-list">
               <div className="contact-detail-item">
-                <div className="contact-icon-box"><Mail /></div>
+                <div className="contact-icon-box"><Mail aria-hidden="true" /></div>
                 <div className="contact-detail-text">
-                  <h4>{t.contact.emailLabel}</h4>
+                  <p><strong>{t.contact.emailLabel}</strong></p>
                   <p><a href="mailto:sitenest.ua@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>sitenest.ua@gmail.com</a></p>
                 </div>
               </div>
               <div className="contact-detail-item">
                 <div className="contact-icon-box">
-                  <svg style={{ width: '20px', height: '20px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  <svg style={{ width: '20px', height: '20px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                 </div>
                 <div className="contact-detail-text">
-                  <h4>{t.contact.instagramLabel}</h4>
+                  <p><strong>{t.contact.instagramLabel}</strong></p>
                   <p><a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@sitenest_agency</a></p>
                 </div>
               </div>
               <div className="contact-detail-item">
-                <div className="contact-icon-box"><MapPin /></div>
+                <div className="contact-icon-box"><MapPin aria-hidden="true" /></div>
                 <div className="contact-detail-text">
-                  <h4>{t.contact.locationLabel}</h4>
+                  <p><strong>{t.contact.locationLabel}</strong></p>
                   <p>{t.contact.location}</p>
                 </div>
               </div>
@@ -79,32 +79,37 @@ export const Contact: React.FC = () => {
             {!formSuccess ? (
               <form id="agencyContactForm" onSubmit={handleFormSubmit}>
                 <div className="form-group">
-                  <label className="form-label">{t.contact.nameLabel}</label>
+                  <label className="form-label" htmlFor="contact-name">{t.contact.nameLabel}</label>
                   <input 
+                    id="contact-name"
                     type="text" 
                     className={`form-input ${formErrors.name ? 'error' : ''}`} 
                     placeholder={t.contact.namePlaceholder}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    autoComplete="name"
                   />
-                  {formErrors.name && <span className="error-message">{formErrors.name}</span>}
+                  {formErrors.name && <span className="error-message" role="alert">{formErrors.name}</span>}
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">{t.contact.emailInputLabel}</label>
+                  <label className="form-label" htmlFor="contact-email">{t.contact.emailInputLabel}</label>
                   <input 
+                    id="contact-email"
                     type="email" 
                     className={`form-input ${formErrors.email ? 'error' : ''}`} 
                     placeholder={t.contact.emailPlaceholder}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    autoComplete="email"
                   />
-                  {formErrors.email && <span className="error-message">{formErrors.email}</span>}
+                  {formErrors.email && <span className="error-message" role="alert">{formErrors.email}</span>}
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">{t.contact.projectTypeLabel}</label>
+                  <label className="form-label" htmlFor="contact-project-type">{t.contact.projectTypeLabel}</label>
                   <select 
+                    id="contact-project-type"
                     className="form-input" 
                     style={{ background: 'var(--bg-dark)' }}
                     value={formData.projectType}
@@ -117,8 +122,9 @@ export const Contact: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">{t.contact.budgetLabel}</label>
+                  <label className="form-label" htmlFor="contact-budget">{t.contact.budgetLabel}</label>
                   <select 
+                    id="contact-budget"
                     className="form-input" 
                     style={{ background: 'var(--bg-dark)' }}
                     value={formData.budget}
@@ -132,14 +138,15 @@ export const Contact: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">{t.contact.messageLabel}</label>
+                  <label className="form-label" htmlFor="contact-message">{t.contact.messageLabel}</label>
                   <textarea 
+                    id="contact-message"
                     className={`form-input ${formErrors.message ? 'error' : ''}`} 
                     placeholder={t.contact.messagePlaceholder}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   ></textarea>
-                  {formErrors.message && <span className="error-message">{formErrors.message}</span>}
+                  {formErrors.message && <span className="error-message" role="alert">{formErrors.message}</span>}
                 </div>
 
                 <button type="submit" className="btn btn-primary form-submit-btn">
