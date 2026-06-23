@@ -66,14 +66,20 @@ export default function App() {
     setLangOpen(false);
   };
 
-  // SEO page title update effects
+  // SEO page title + meta update effects
   useEffect(() => {
-    let title = 'SiteNest Agency | Інноваційна розробка сайтів';
-    let desc = 'Розробка сайтів під ключ: Front-end, Back-end, DevOps та комплексне SMM просування від професіоналів.';
-    
+    let title = 'SiteNest Agency | Розробка веб-сайтів у Львові';
+    let desc = lang === 'uk'
+      ? 'SiteNest Agency — веб-агенція з Львова. Розробляємо швидкі, адаптивні сайти під ключ: Front-end, Back-end, DevOps та SMM просування.'
+      : 'SiteNest Agency — web agency from Lviv. We build fast, responsive websites: Front-end, Back-end, DevOps and SMM.';
+    let canonical = 'https://sitenest.agency/';
+
     if (currentPage === 'services') {
-      title = lang === 'uk' ? 'Послуги та Калькулятор | SiteNest Agency' : 'Services & Calculator | SiteNest Agency';
-      desc = lang === 'uk' ? 'Дізнайтесь вартість вашого проекту за допомогою нашого інтерактивного калькулятора послуг.' : 'Find out your project cost using our interactive service calculator.';
+      title = lang === 'uk' ? 'Послуги та Калькулятор Вартості | SiteNest Agency' : 'Services & Price Calculator | SiteNest Agency';
+      desc = lang === 'uk'
+        ? 'Дізнайтесь вартість вашого сайту за допомогою інтерактивного калькулятора. Front-end, Back-end, DevOps, SMM — обираємо разом.'
+        : 'Find out your website cost using our interactive calculator. Front-end, Back-end, DevOps, SMM — choose together.';
+      canonical = 'https://sitenest.agency/services';
     } else if (currentPage.startsWith('service-')) {
       const serviceKey = currentPage.replace('service-', '') as 'frontend' | 'backend' | 'devops' | 'smm';
       const serviceName = lang === 'uk'
@@ -81,36 +87,76 @@ export default function App() {
         : (serviceKey === 'frontend' ? 'Front-end Development' : serviceKey === 'backend' ? 'Back-end Engineering' : serviceKey === 'devops' ? 'DevOps & Cloud' : 'SMM & SEO');
       title = `${serviceName} | SiteNest Agency`;
       desc = lang === 'uk'
-        ? `Професійні послуги ${serviceName} від компанії SiteNest Agency.`
-        : `Professional ${serviceName} services by SiteNest Agency.`;
+        ? `Професійні послуги ${serviceName} від SiteNest Agency — команди з Львова. Швидко, якісно, в строк.`
+        : `Professional ${serviceName} services by SiteNest Agency — a team from Lviv, Ukraine.`;
+      canonical = `https://sitenest.agency/${currentPage}`;
     } else if (currentPage === 'team') {
-      title = lang === 'uk' ? 'Наша Команда | Експерти SiteNest' : 'Our Team | SiteNest Experts';
-      desc = lang === 'uk' ? 'Знайомтесь із командою SiteNest.' : 'Meet the SiteNest team.';
+      title = lang === 'uk' ? 'Наша Команда | Фахівці SiteNest Agency' : 'Our Team | SiteNest Agency Specialists';
+      desc = lang === 'uk'
+        ? 'Познайомтесь із командою SiteNest Agency — 4 фахівці: Front-end, Back-end, DevOps та SMM.'
+        : 'Meet the SiteNest Agency team — 4 specialists: Front-end, Back-end, DevOps and SMM.';
+      canonical = 'https://sitenest.agency/team';
     } else if (currentPage === 'blog') {
-      title = lang === 'uk' ? 'SEO Блог про Веб-розробку | SiteNest' : 'Web Dev Blog | SiteNest';
-      desc = lang === 'uk' ? 'Корисні статті про швидкодію, бекенд-архітектуру та SEO.' : 'Useful articles about performance, backend architecture and SEO.';
+      title = lang === 'uk' ? 'Блог про Веб-розробку та SEO | SiteNest Agency' : 'Web Development & SEO Blog | SiteNest Agency';
+      desc = lang === 'uk'
+        ? 'Корисні статті про веб-розробку, SEO, швидкодію сайту та бекенд-архітектуру від команди SiteNest.'
+        : 'Useful articles about web development, SEO, site performance and backend architecture from SiteNest team.';
+      canonical = 'https://sitenest.agency/blog';
     } else if (currentPage.startsWith('blog-post-')) {
       const post = BLOG_POSTS.find(p => p.id === currentPage);
       if (post) {
         title = `${post.title} | SiteNest Blog`;
         desc = post.summary;
       }
+      canonical = `https://sitenest.agency/${currentPage}`;
     } else if (currentPage === 'contact') {
-      title = lang === 'uk' ? 'Контакти | SiteNest Agency' : 'Contact | SiteNest Agency';
-      desc = lang === 'uk' ? 'Зв\'яжіться з нами для обговорення вашого проекту.' : 'Contact us to discuss your project.';
+      title = lang === 'uk' ? 'Контакти | Замовити Сайт | SiteNest Agency' : 'Contact | Order a Website | SiteNest Agency';
+      desc = lang === 'uk'
+        ? 'Зв\'яжіться з SiteNest Agency для замовлення сайту. Email: sitenest.ua@gmail.com. Відповімо протягом 24 годин.'
+        : 'Contact SiteNest Agency to order a website. Email: sitenest.ua@gmail.com. We reply within 24 hours.';
+      canonical = 'https://sitenest.agency/contact';
     } else if (currentPage === 'process') {
-      title = lang === 'uk' ? 'Процес Розробки | SiteNest Agency' : 'Development Process | SiteNest Agency';
-      desc = lang === 'uk' ? 'Як ми працюємо — від брифу до релізу.' : 'How we work — from brief to launch.';
+      title = lang === 'uk' ? 'Процес Розробки Сайту | SiteNest Agency' : 'Website Development Process | SiteNest Agency';
+      desc = lang === 'uk'
+        ? 'Як ми розробляємо сайти — від брифу до релізу. Прозора методологія, фіксовані строки та постійна комунікація.'
+        : 'How we build websites — from brief to launch. Transparent methodology, fixed deadlines and constant communication.';
+      canonical = 'https://sitenest.agency/process';
     } else if (currentPage === 'portfolio') {
-      title = lang === 'uk' ? 'Портфоліо Проектів | SiteNest Agency' : 'Project Portfolio | SiteNest Agency';
-      desc = lang === 'uk' ? 'Реальні кейси команди SiteNest.' : 'Real case studies from the SiteNest team.';
+      title = lang === 'uk' ? 'Портфоліо | Наші Проекти | SiteNest Agency' : 'Portfolio | Our Projects | SiteNest Agency';
+      desc = lang === 'uk'
+        ? 'Реальні кейси та проекти команди SiteNest Agency. Перегляньте наші роботи та оцініть якість.'
+        : 'Real case studies and projects by the SiteNest Agency team. Review our work and assess the quality.';
+      canonical = 'https://sitenest.agency/portfolio';
     }
-    
+
     document.title = title;
+
+    // Update meta description
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', desc);
+    if (metaDesc) metaDesc.setAttribute('content', desc);
+
+    // Update canonical link
+    let canonicalEl = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonicalEl) {
+      canonicalEl = document.createElement('link');
+      canonicalEl.rel = 'canonical';
+      document.head.appendChild(canonicalEl);
     }
+    canonicalEl.href = canonical;
+
+    // Update OG tags
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.setAttribute('content', canonical);
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', title);
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', desc);
+    const twUrl = document.querySelector('meta[property="twitter:url"]');
+    if (twUrl) twUrl.setAttribute('content', canonical);
+    const twTitle = document.querySelector('meta[property="twitter:title"]');
+    if (twTitle) twTitle.setAttribute('content', title);
+    const twDesc = document.querySelector('meta[property="twitter:description"]');
+    if (twDesc) twDesc.setAttribute('content', desc);
   }, [currentPage, lang]);
 
   // Scroll listener for header style alterations
@@ -280,10 +326,10 @@ export default function App() {
             </div>
             <p>{t.footer.tagline}</p>
             <div className="footer-socials">
-              <span className="social-icon">
+              <a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" className="social-icon">
                 <svg style={{ width: '18px', height: '18px' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              </span>
-              <span className="social-icon"><Mail style={{ width: '18px', height: '18px' }} /></span>
+              </a>
+              <a href="mailto:sitenest.ua@gmail.com" className="social-icon"><Mail style={{ width: '18px', height: '18px' }} /></a>
             </div>
           </div>
 
@@ -311,12 +357,12 @@ export default function App() {
 
           <div className="footer-column footer-contacts">
             <h4>{t.footer.contacts}</h4>
-            <p><Mail /> hello@sitenest.agency</p>
+            <p><Mail /> <a href="mailto:sitenest.ua@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>sitenest.ua@gmail.com</a></p>
             <p>
               <svg style={{ width: '16px', height: '16px', marginRight: '8px', verticalAlign: 'middle', display: 'inline-block' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              @sitenest_agency
+              <a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@sitenest_agency</a>
             </p>
-            <p><MapPin /> {lang === 'uk' ? 'Київ, Україна' : 'Kyiv, Ukraine'}</p>
+            <p><MapPin /> {lang === 'uk' ? 'Львів, Україна' : 'Lviv, Ukraine'}</p>
           </div>
         </div>
 

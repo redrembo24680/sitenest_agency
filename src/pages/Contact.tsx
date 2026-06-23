@@ -53,7 +53,7 @@ export const Contact: React.FC = () => {
                 <div className="contact-icon-box"><Mail /></div>
                 <div className="contact-detail-text">
                   <h4>{t.contact.emailLabel}</h4>
-                  <p>hello@sitenest.agency</p>
+                  <p><a href="mailto:sitenest.ua@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>sitenest.ua@gmail.com</a></p>
                 </div>
               </div>
               <div className="contact-detail-item">
@@ -62,7 +62,7 @@ export const Contact: React.FC = () => {
                 </div>
                 <div className="contact-detail-text">
                   <h4>{t.contact.instagramLabel}</h4>
-                  <p>@sitenest_agency</p>
+                  <p><a href="https://www.instagram.com/sitenest_agency?igsh=YXJkZmYwZzFyY2c0&utm_source=qr" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@sitenest_agency</a></p>
                 </div>
               </div>
               <div className="contact-detail-item">
