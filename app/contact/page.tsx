@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, MapPin, Send, Check, Loader2 } from 'lucide-react';
 import { FaqAccordionItem } from '@/components/FaqAccordionItem';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -11,13 +11,22 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    projectType: 'corporate',
-    budget: '1000-3000',
+    projectType: t.services.corporateTitle as string,
+    budget: t.contact.budget1k as string,
     message: '',
     botcheck: '' // honeypot
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [formSuccess, setFormSuccess] = useState<boolean>(false);
+  const [formState, setFormState] = useState<'idle' | 'confirm_pending' | 'success'>('idle');
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('confirmed') === 'true') {
+        setFormState('success');
+      }
+    }
+  }, []);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -56,7 +65,7 @@ export default function Contact() {
       const result = await sendContactEmail(submitData);
       
       if (result.success) {
-        setFormSuccess(true);
+        setFormState('confirm_pending');
         setFormData({ ...formData, message: '', botcheck: '' });
       } else {
         setFormErrors({ submit: result.message || 'Failed to send' });
@@ -105,7 +114,7 @@ export default function Contact() {
           </div>
 
           <div className="glass-card contact-form-card">
-            {!formSuccess ? (
+            {formState === 'idle' ? (
               <form id="agencyContactForm" onSubmit={handleFormSubmit}>
                 {formErrors.submit && (
                   <div className="error-message" style={{ marginBottom: '1rem', padding: '0.5rem', background: 'rgba(255, 0, 0, 0.1)', borderLeft: '3px solid red' }}>
@@ -158,9 +167,9 @@ export default function Contact() {
                     value={formData.projectType}
                     onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                   >
-                    <option value="landing">Landing Page</option>
-                    <option value="corporate">{t.services.corporateTitle}</option>
-                    <option value="ecommerce">{t.services.ecommerceTitle}</option>
+                    <option value={t.services.landingTitle}>{t.services.landingTitle}</option>
+                    <option value={t.services.corporateTitle}>{t.services.corporateTitle}</option>
+                    <option value={t.services.ecommerceTitle}>{t.services.ecommerceTitle}</option>
                   </select>
                 </div>
 
@@ -173,10 +182,10 @@ export default function Contact() {
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                   >
-                    <option value="less-1000">{t.contact.budgetLess}</option>
-                    <option value="1000-3000">{t.contact.budget1k}</option>
-                    <option value="3000-7000">{t.contact.budget3k}</option>
-                    <option value="more-7000">{t.contact.budgetMore}</option>
+                    <option value={t.contact.budgetLess}>{t.contact.budgetLess}</option>
+                    <option value={t.contact.budget1k}>{t.contact.budget1k}</option>
+                    <option value={t.contact.budget3k}>{t.contact.budget3k}</option>
+                    <option value={t.contact.budgetMore}>{t.contact.budgetMore}</option>
                   </select>
                 </div>
 
@@ -205,9 +214,18 @@ export default function Contact() {
                 <div className="success-icon-box">
                   <Check />
                 </div>
-                <h3>{t.contact.successTitle}</h3>
-                <p>{t.contact.successDesc.replace('{name}', formData.name)}</p>
-                <button className="btn btn-outline" style={{ marginTop: '2rem' }} type="button" onClick={() => setFormSuccess(false)}>
+                <h3>{formState === 'confirm_pending' ? t.contact.confirmTitle : t.contact.successTitle}</h3>
+                <p>
+                  {formState === 'confirm_pending' 
+                    ? t.contact.confirmDesc.replace('{name}', formData.name)
+                    : t.contact.successDesc}
+                </p>
+                <button className="btn btn-outline" style={{ marginTop: '2rem' }} type="button" onClick={() => {
+                  setFormState('idle');
+                  if (typeof window !== 'undefined') {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                  }
+                }}>
                   {t.contact.sendAgain}
                 </button>
               </div>
