@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, MapPin, Send, Check, Loader2 } from 'lucide-react';
 import { FaqAccordionItem } from '@/components/FaqAccordionItem';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -17,7 +17,16 @@ export default function Contact() {
     botcheck: '' // honeypot
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [formSuccess, setFormSuccess] = useState<boolean>(false);
+  const [formState, setFormState] = useState<'idle' | 'confirm_pending' | 'success'>('idle');
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('confirmed') === 'true') {
+        setFormState('success');
+      }
+    }
+  }, []);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -56,7 +65,7 @@ export default function Contact() {
       const result = await sendContactEmail(submitData);
       
       if (result.success) {
-        setFormSuccess(true);
+        setFormState('confirm_pending');
         setFormData({ ...formData, message: '', botcheck: '' });
       } else {
         setFormErrors({ submit: result.message || 'Failed to send' });
@@ -105,7 +114,7 @@ export default function Contact() {
           </div>
 
           <div className="glass-card contact-form-card">
-            {!formSuccess ? (
+            {formState === 'idle' ? (
               <form id="agencyContactForm" onSubmit={handleFormSubmit}>
                 {formErrors.submit && (
                   <div className="error-message" style={{ marginBottom: '1rem', padding: '0.5rem', background: 'rgba(255, 0, 0, 0.1)', borderLeft: '3px solid red' }}>
@@ -205,9 +214,18 @@ export default function Contact() {
                 <div className="success-icon-box">
                   <Check />
                 </div>
-                <h3>{t.contact.successTitle}</h3>
-                <p>{t.contact.successDesc.replace('{name}', formData.name)}</p>
-                <button className="btn btn-outline" style={{ marginTop: '2rem' }} type="button" onClick={() => setFormSuccess(false)}>
+                <h3>{formState === 'confirm_pending' ? t.contact.confirmTitle : t.contact.successTitle}</h3>
+                <p>
+                  {formState === 'confirm_pending' 
+                    ? t.contact.confirmDesc.replace('{name}', formData.name)
+                    : t.contact.successDesc}
+                </p>
+                <button className="btn btn-outline" style={{ marginTop: '2rem' }} type="button" onClick={() => {
+                  setFormState('idle');
+                  if (typeof window !== 'undefined') {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                  }
+                }}>
                   {t.contact.sendAgain}
                 </button>
               </div>
