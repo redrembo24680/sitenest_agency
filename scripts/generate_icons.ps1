@@ -13,26 +13,18 @@ function Draw-Logo {
     $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
     $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
     
+    # Transparent background so it looks like a clean icon shape
     $g.Clear([System.Drawing.Color]::Transparent)
     
     # Scale factor
     $scale = $size / 100.0
     
-    # Create the gradient brush
-    # x1=20, y1=10, x2=80, y2=90
-    $p1 = New-Object System.Drawing.PointF (20 * $scale), (10 * $scale)
-    $p2 = New-Object System.Drawing.PointF (80 * $scale), (90 * $scale)
-    
-    # In .NET we can use LinearGradientBrush
-    $color1 = [System.Drawing.ColorTranslator]::FromHtml("#ff5e00")
-    $color2 = [System.Drawing.ColorTranslator]::FromHtml("#ff007f")
-    $color3 = [System.Drawing.ColorTranslator]::FromHtml("#00f0ff")
-    
-    $brush = New-Object System.Drawing.Drawing2D.LinearGradientBrush $p1, $p2, $color1, $color3
-    $blend = New-Object System.Drawing.Drawing2D.ColorBlend
-    $blend.Colors = @($color1, $color2, $color3)
-    $blend.Positions = @(0.0, 0.5, 1.0)
-    $brush.InterpolationColors = $blend
+    # Create a solid white brush and pen for the logo with thicker lines
+    $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::White)
+    $pen = New-Object System.Drawing.Pen $brush, (20 * $scale)
+    $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
+    $pen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
+    $pen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
     
     # Draw path
     $points = @(
@@ -47,23 +39,17 @@ function Draw-Logo {
         (New-Object System.Drawing.PointF (20 * $scale), (75 * $scale))
     )
     
-    $pen = New-Object System.Drawing.Pen $brush, (12 * $scale)
-    $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
-    $pen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
-    $pen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
-    
     # Draw lines
     for ($i = 0; $i -lt $points.Length - 1; $i++) {
         $g.DrawLine($pen, $points[$i], $points[$i+1])
     }
     
-    # Draw the 4 rects
-    # (42, 32), (52, 32), (42, 42), (52, 42) of size 6
+    # Draw the 4 rects (made slightly larger to match the thicker stroke)
     $rects = @(
-        (New-Object System.Drawing.RectangleF (42 * $scale), (32 * $scale), (6 * $scale), (6 * $scale)),
-        (New-Object System.Drawing.RectangleF (52 * $scale), (32 * $scale), (6 * $scale), (6 * $scale)),
-        (New-Object System.Drawing.RectangleF (42 * $scale), (42 * $scale), (6 * $scale), (6 * $scale)),
-        (New-Object System.Drawing.RectangleF (52 * $scale), (42 * $scale), (6 * $scale), (6 * $scale))
+        (New-Object System.Drawing.RectangleF (38 * $scale), (28 * $scale), (10 * $scale), (10 * $scale)),
+        (New-Object System.Drawing.RectangleF (52 * $scale), (28 * $scale), (10 * $scale), (10 * $scale)),
+        (New-Object System.Drawing.RectangleF (38 * $scale), (42 * $scale), (10 * $scale), (10 * $scale)),
+        (New-Object System.Drawing.RectangleF (52 * $scale), (42 * $scale), (10 * $scale), (10 * $scale))
     )
     
     foreach ($r in $rects) {
