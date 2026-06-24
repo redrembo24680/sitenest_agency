@@ -36,7 +36,7 @@ export async function sendContactEmail(formData: FormData) {
   try {
     const data = { name, email, projectType, budget, message };
     const json = JSON.stringify(data);
-    const base64 = Buffer.from(json).toString('base64');
+    const base64 = Buffer.from(json).toString('base64url');
     const hmac = crypto.createHmac('sha256', SECRET).update(base64).digest('hex');
     const token = `${base64}.${hmac}`;
 
