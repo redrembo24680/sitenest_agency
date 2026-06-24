@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, MapPin, Send, Check } from 'lucide-react';
+import { Mail, MapPin, Send, Check, Loader2 } from 'lucide-react';
 import { FaqAccordionItem } from '@/components/FaqAccordionItem';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { sendContactEmail } from '@/app/actions/contact';
 
 export default function Contact() {
   const { t } = useLanguage();
@@ -12,12 +13,14 @@ export default function Contact() {
     email: '',
     projectType: 'corporate',
     budget: '1000-3000',
-    message: ''
+    message: '',
+    botcheck: '' // honeypot
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors: Record<string, string> = {};
 
@@ -35,9 +38,33 @@ export default function Contact() {
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-    } else {
-      setFormErrors({});
-      setFormSuccess(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFormErrors({});
+    
+    try {
+      const submitData = new FormData();
+      submitData.append('name', formData.name);
+      submitData.append('email', formData.email);
+      submitData.append('projectType', formData.projectType);
+      submitData.append('budget', formData.budget);
+      submitData.append('message', formData.message);
+      submitData.append('botcheck', formData.botcheck);
+
+      const result = await sendContactEmail(submitData);
+      
+      if (result.success) {
+        setFormSuccess(true);
+        setFormData({ ...formData, message: '', botcheck: '' });
+      } else {
+        setFormErrors({ submit: result.message || 'Failed to send' });
+      }
+    } catch (error) {
+      setFormErrors({ submit: 'An error occurred while sending' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -80,6 +107,20 @@ export default function Contact() {
           <div className="glass-card contact-form-card">
             {!formSuccess ? (
               <form id="agencyContactForm" onSubmit={handleFormSubmit}>
+                {formErrors.submit && (
+                  <div className="error-message" style={{ marginBottom: '1rem', padding: '0.5rem', background: 'rgba(255, 0, 0, 0.1)', borderLeft: '3px solid red' }}>
+                    {formErrors.submit}
+                  </div>
+                )}
+
+                {/* Honeypot field (hidden from users) */}
+                <input 
+                  type="checkbox" 
+                  name="botcheck" 
+                  style={{ display: 'none' }}
+                  onChange={(e) => setFormData({ ...formData, botcheck: e.target.checked ? 'true' : '' })}
+                />
+
                 <div className="form-group">
                   <label className="form-label" htmlFor="contact-name">{t.contact.nameLabel}</label>
                   <input 
@@ -151,8 +192,12 @@ export default function Contact() {
                   {formErrors.message && <span className="error-message" role="alert">{formErrors.message}</span>}
                 </div>
 
-                <button type="submit" className="btn btn-primary form-submit-btn">
-                  {t.contact.submitBtn} <Send className="btn-icon" />
+                <button type="submit" className="btn btn-primary form-submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>Надсилання... <Loader2 className="btn-icon animate-spin" /></>
+                  ) : (
+                    <>{t.contact.submitBtn} <Send className="btn-icon" /></>
+                  )}
                 </button>
               </form>
             ) : (
