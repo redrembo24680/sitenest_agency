@@ -21,8 +21,7 @@
   --gradient-dark: linear-gradient(180deg, var(--bg-dark), var(--bg-darker));
   
   /* Typography */
-  --font-title: 'Outfit', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
+  /* --font-title and --font-body are injected by Next.js in layout.tsx */
   
   /* Transitions & Effects */
   --transition-fast: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
