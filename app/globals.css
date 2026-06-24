@@ -101,7 +101,7 @@ input, textarea, select, button {
 
 /* --- STRUCTURE / LAYOUT --- */
 .container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
   position: relative;
@@ -260,7 +260,7 @@ header .nav-container {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 100px;
-  padding: 0.6rem 2rem;
+  padding: 0.6rem 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -278,6 +278,7 @@ header .nav-container {
   color: #fff;
   letter-spacing: -0.5px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .logo-icon {
@@ -294,17 +295,18 @@ header .nav-container {
 
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.2rem;
   list-style: none;
 }
 
 .nav-links a {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #cbd5e1;
   position: relative;
   padding: 0.2rem 0;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .nav-links a::after {
@@ -344,6 +346,7 @@ header .nav-container {
   transition: var(--transition-fast);
   cursor: pointer;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .nav-cta:hover {
