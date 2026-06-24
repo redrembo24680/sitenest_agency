@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
+import Script from 'next/script';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -31,6 +32,15 @@ export const metadata: Metadata = {
     images: ['/og-image.webp'],
   },
   alternates: { canonical: 'https://sitenest.work' },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 const outfit = Outfit({ 
@@ -46,9 +56,71 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    'name': 'SiteNest Agency',
+    'image': 'https://sitenest.work/og-image.webp',
+    '@id': 'https://sitenest.work/#organization',
+    'url': 'https://sitenest.work',
+    'address': {
+      '@type': 'PostalAddress',
+      'addressLocality': 'Львів',
+      'addressRegion': 'Львівська область',
+      'addressCountry': 'UA',
+    },
+    'geo': {
+      '@type': 'GeoCoordinates',
+      'latitude': 49.8397,
+      'longitude': 24.0297,
+    },
+    'sameAs': [
+      'https://www.instagram.com/sitenest_agency',
+    ],
+    'priceRange': '$$',
+  };
+
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    'name': 'SiteNest Agency',
+    'url': 'https://sitenest.work',
+  };
+
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-5K8Z6R3';
+
   return (
     <html lang="uk" className={`${outfit.variable} ${plusJakartaSans.variable}`}>
       <body>
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+        <Script
+          id="gtm-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${gtmId}');
+            `,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <LanguageProvider>
           <div className="bg-grid" />
           <div className="glow-orb glow-orb-1" />

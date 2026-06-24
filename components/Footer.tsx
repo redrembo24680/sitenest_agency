@@ -26,7 +26,7 @@ export function Footer() {
         </div>
 
         <div className="footer-column">
-          <h4>{t.footer.navigation}</h4>
+          <h3>{t.footer.navigation}</h3>
           <ul className="footer-links">
             <li><Link href="/">{t.nav.home}</Link></li>
             <li><Link href="/services">{t.nav.services}</Link></li>
@@ -38,7 +38,7 @@ export function Footer() {
         </div>
 
         <div className="footer-column">
-          <h4>{t.footer.services}</h4>
+          <h3>{t.footer.services}</h3>
           <ul className="footer-links">
             <li><Link href="/services/frontend">Front-end</Link></li>
             <li><Link href="/services/backend">Back-end</Link></li>
@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         <div className="footer-column footer-contacts">
-          <h4>{t.footer.contacts}</h4>
+          <h3>{t.footer.contacts}</h3>
           <p><Mail />{' '}<a href="mailto:sitenest.ua@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>sitenest.ua@gmail.com</a></p>
           <p>
             <svg style={{ width: '16px', height: '16px', marginRight: '8px', verticalAlign: 'middle', display: 'inline-block' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
