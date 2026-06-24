@@ -942,7 +942,7 @@ footer {
   box-shadow: 0 5px 12px rgba(255, 0, 127, 0.2);
 }
 
-.footer-column h4 {
+.footer-column h3 {
   font-family: var(--font-title);
   font-size: 1.05rem;
   font-weight: 700;
@@ -951,7 +951,7 @@ footer {
   position: relative;
 }
 
-.footer-column h4::after {
+.footer-column h3::after {
   content: '';
   position: absolute;
   left: 0;
