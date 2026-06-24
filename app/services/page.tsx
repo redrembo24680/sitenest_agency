@@ -19,15 +19,15 @@ export default function Services() {
 
   // Estimator price calculator effect
   useEffect(() => {
-    let base = 1200;
-    if (calcType === 'landing') base = 600;
-    if (calcType === 'ecommerce') base = 1800;
+    let base = 250;
+    if (calcType === 'landing') base = 150;
+    if (calcType === 'ecommerce') base = 400;
 
-    const pageCost = calcPages * 40;
+    const pageCost = calcPages * 5;
     const addonsCost = 
-      (calcDevops ? 300 : 0) + 
-      (calcSmm ? 400 : 0) + 
-      (calcApi ? 500 : 0);
+      (calcDevops ? 50 : 0) + 
+      (calcSmm ? 100 : 0) + 
+      (calcApi ? 100 : 0);
 
     const total = base + pageCost + addonsCost;
     
