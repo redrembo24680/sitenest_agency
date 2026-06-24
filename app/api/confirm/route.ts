@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       return new NextResponse('Invalid or expired token', { status: 400 });
     }
 
-    const json = Buffer.from(base64, 'base64').toString('utf8');
+    const json = Buffer.from(base64, 'base64url').toString('utf8');
     const data = JSON.parse(json);
 
     const { name, email, projectType, budget, message } = data;
