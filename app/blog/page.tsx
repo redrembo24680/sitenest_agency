@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search } from 'lucide-react';
 import { MemberAvatar } from '@/components/MemberAvatar';
 import { BLOG_POSTS } from '@/lib/data';
@@ -64,7 +65,7 @@ export default function Blog() {
             >
               <div className="blog-card-img">
                 {post.image ? (
-                  <img src={post.image} alt={post.title} className="blog-cover-img" />
+                  <Image src={post.image} alt={post.title} className="blog-cover-img" width={800} height={400} />
                 ) : (
                   <MemberAvatar colorClass={post.id} devType={post.category} />
                 )}

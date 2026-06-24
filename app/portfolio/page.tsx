@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronRight, X, ExternalLink, TrendingUp, Users, Zap } from 'lucide-react';
 import { PORTFOLIO_PROJECTS } from '@/lib/data';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -104,13 +105,13 @@ export default function Portfolio() {
                 onClick={() => setSelected(project)}
               >
                 <div className="portfolio-extended-img-wrap">
-                  <img
+                  <Image
                     src={project.img}
                     alt={project.title}
                     className="portfolio-extended-img"
                     loading="lazy"
-                    width="600"
-                    height="400"
+                    width={600}
+                    height={400}
                   />
                   <span className="portfolio-cat portfolio-cat-badge">{project.catLabel}</span>
                 </div>
@@ -167,7 +168,7 @@ export default function Portfolio() {
             <button className="modal-close" type="button" onClick={() => setSelected(null)} aria-label="Закрити модальне вікно">
               <X aria-hidden="true" />
             </button>
-            <img src={selected.img} alt={selected.title} className="portfolio-modal-img" loading="lazy" />
+            <Image src={selected.img} alt={selected.title} className="portfolio-modal-img" loading="lazy" width={1000} height={600} />
             <div className="portfolio-modal-body">
               <span className="portfolio-cat">{selected.catLabel}</span>
               <h2>{selected.title}</h2>

@@ -2,6 +2,7 @@
 
 import React, { use } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Share2 } from 'lucide-react';
 import { MemberAvatar } from '@/components/MemberAvatar';
 import { BLOG_POSTS } from '@/lib/data';
@@ -52,7 +53,7 @@ export default function BlogPostDetail({ params }: BlogPostPageProps) {
 
         <div className="post-cover-image">
           {post.image ? (
-            <img src={post.image} alt={post.title} className="blog-cover-img-full" />
+            <Image src={post.image} alt={post.title} className="blog-cover-img-full" width={1200} height={600} />
           ) : (
             <MemberAvatar colorClass={post.id} devType={post.category} />
           )}

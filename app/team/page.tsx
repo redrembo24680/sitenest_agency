@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import Image from 'next/image';
 import { MemberAvatar } from '@/components/MemberAvatar';
 import { TEAM_MEMBERS } from '@/lib/data';
 import type { TeamMember } from '@/lib/data';
@@ -32,7 +33,7 @@ export default function Team() {
               <div className="team-card-inner">
                 <div className="team-img-wrapper">
                   {member.image ? (
-                    <img src={member.image} alt={member.name} className="team-member-img" />
+                    <Image src={member.image} alt={member.name} className="team-member-img" width={256} height={256} />
                   ) : (
                     <MemberAvatar colorClass={member.id} devType={member.avatarId} />
                   )}
@@ -70,7 +71,7 @@ export default function Team() {
             <div className="modal-body-grid">
               <div className="modal-left">
                 {selectedMember.image ? (
-                  <img src={selectedMember.image} alt={selectedMember.name} className="team-member-img-full" />
+                  <Image src={selectedMember.image} alt={selectedMember.name} className="team-member-img-full" width={512} height={512} />
                 ) : (
                   <MemberAvatar colorClass={selectedMember.id} devType={selectedMember.avatarId} />
                 )}

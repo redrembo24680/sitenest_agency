@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, ChevronRight, Code, Server, Cpu, TrendingUp, Send } from 'lucide-react';
 import { LogoIcon } from '@/components/LogoIcon';
 import { Testimonials } from '@/components/Testimonials';
@@ -213,7 +214,7 @@ export default function Home() {
                 href="/portfolio"
                 aria-label={`Переглянути проект: ${project.title}`}
               >
-                <img className="portfolio-img" src={project.img} alt={project.title} loading="lazy" />
+                <Image className="portfolio-img" src={project.img} alt={project.title} loading="lazy" width={600} height={400} />
                 <div className="portfolio-overlay" aria-hidden="true">
                   <span className="portfolio-cat">{project.catLabel}</span>
                   <h3 className="portfolio-title">{project.title}</h3>
