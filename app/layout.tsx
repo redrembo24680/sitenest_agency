@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -32,9 +33,21 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://sitenest.work' },
 };
 
+const outfit = Outfit({ 
+  subsets: ['latin'],
+  variable: '--font-title',
+  display: 'swap',
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({ 
+  subsets: ['latin', 'cyrillic-ext'],
+  variable: '--font-body',
+  display: 'swap',
+});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uk">
+    <html lang="uk" className={`${outfit.variable} ${plusJakartaSans.variable}`}>
       <body>
         <LanguageProvider>
           <div className="bg-grid" />
