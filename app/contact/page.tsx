@@ -11,8 +11,8 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    projectType: 'corporate',
-    budget: '1000-3000',
+    projectType: t.services.corporateTitle as string,
+    budget: t.contact.budget1k as string,
     message: '',
     botcheck: '' // honeypot
   });
@@ -158,9 +158,9 @@ export default function Contact() {
                     value={formData.projectType}
                     onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                   >
-                    <option value="landing">Landing Page</option>
-                    <option value="corporate">{t.services.corporateTitle}</option>
-                    <option value="ecommerce">{t.services.ecommerceTitle}</option>
+                    <option value={t.services.landingTitle}>{t.services.landingTitle}</option>
+                    <option value={t.services.corporateTitle}>{t.services.corporateTitle}</option>
+                    <option value={t.services.ecommerceTitle}>{t.services.ecommerceTitle}</option>
                   </select>
                 </div>
 
@@ -173,10 +173,10 @@ export default function Contact() {
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                   >
-                    <option value="less-1000">{t.contact.budgetLess}</option>
-                    <option value="1000-3000">{t.contact.budget1k}</option>
-                    <option value="3000-7000">{t.contact.budget3k}</option>
-                    <option value="more-7000">{t.contact.budgetMore}</option>
+                    <option value={t.contact.budgetLess}>{t.contact.budgetLess}</option>
+                    <option value={t.contact.budget1k}>{t.contact.budget1k}</option>
+                    <option value={t.contact.budget3k}>{t.contact.budget3k}</option>
+                    <option value={t.contact.budgetMore}>{t.contact.budgetMore}</option>
                   </select>
                 </div>
 
