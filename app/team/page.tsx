@@ -56,8 +56,14 @@ export default function Team() {
 
       {/* TEAM MEMBER MODAL DETAIL POPUP */}
       {selectedMember && (
-        <div className="team-details-modal active">
-          <div className="glass-card modal-content">
+        <div 
+          className="team-details-modal active"
+          onClick={() => setSelectedMember(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedMember.name}
+        >
+          <div className="glass-card modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" type="button" onClick={() => setSelectedMember(null)}>
               <X />
             </button>
