@@ -14,7 +14,7 @@ export default function ServiceDetail({ params }: ServicePageProps) {
   const { slug } = use(params);
   const { t } = useLanguage();
 
-  const serviceId = slug as 'frontend' | 'backend' | 'devops' | 'smm';
+  const serviceId = slug.replace('-', '_') as 'frontend' | 'backend' | 'devops' | 'smm' | 'ai_integration' | 'web_scraping' | 'telegram_bots';
 
   // Find the translation object for this service
   const serviceData = t.serviceDetails[serviceId];
