@@ -191,6 +191,48 @@ export const translations = {
           'Проведення спліт-тестів (A/B Testing) для банерів та цільових сторінок.'
         ],
         technologies: ['Meta Ads Manager', 'Google Analytics 4', 'Google Tag Manager', 'SEO Copywriting', 'Ahrefs / SEMrush', 'Figma (Banners)', 'A/B Testing', 'Insta Growth']
+      },
+      ai_integration: {
+        title: 'Впровадження штучного інтелекту в бізнесі',
+        tagline: 'Автономні AI-агенти та безшовна інтеграція ChatGPT для автоматизації рутини.',
+        desc1: 'Штучний інтелект в бізнесі — це вже не майбутнє, а ключова перевага над конкурентами. Ми здійснюємо професійне впровадження штучного інтелекту у ваші існуючі веб-додатки, CRM-системи та Telegram-боти для максимальної автоматизації.',
+        desc2: 'Надійна інтеграція ChatGPT (OpenAI API), Claude або Groq дозволяє делегувати алгоритмам клієнтську підтримку, обробку лідів та генерацію контенту. Ми розробляємо AI для бізнесу на базі архітектури "Chain of Thought", що забезпечує високу точність та логічність рішень без галюцинацій.',
+        features: [
+          'Безпечна інтеграція ChatGPT та інших LLM у корпоративні системи.',
+          'Розробка автономних AI-агентів для збору даних та виконання задач.',
+          'Налаштування Vector Databases (Pinecone) для пошуку по базі знань компанії.',
+          'Створення "розумних" ботів-консультантів, що продають 24/7.',
+          'Впровадження штучного інтелекту для фінансової аналітики та моніторингу.'
+        ],
+        technologies: ['OpenAI API', 'LangChain', 'Python (FastAPI)', 'Pinecone (Vector DB)', 'Claude 3', 'Groq', 'Next.js']
+      },
+      web_scraping: {
+        title: 'Професійний парсинг сайтів та збір даних',
+        tagline: 'Автоматизований веб-скрапінг, розробка складних парсерів та безперервний моніторинг ринку.',
+        desc1: 'Дані — це нова нафта. Ми пропонуємо професійний парсинг сайтів будь-якої складності для B2B сегменту. Використовуючи сучасні інструменти (Playwright, Puppeteer), ми успішно обходимо Cloudflare, капчі та складні механізми захисту для видобутку інформації з найскладніших динамічних веб-ресурсів (SPA).',
+        desc2: 'Наш досвід включає розробку високонавантажених систем безперервного моніторингу: від відстеження криптовалютних спредів (USDT/UAH для P2P-торгівлі) до агрегації ігрової статистики та цін на скіни CS2. Індивідуальна розробка парсера дозволить вам повністю автоматизувати моніторинг цін конкурентів і миттєво реагувати на зміни ринку.',
+        features: [
+          'Парсинг динамічних сайтів (React/Next.js) за допомогою Playwright.',
+          'Обхід Anti-Bot систем (Cloudflare, Datadome) через ротацію проксі.',
+          'Безперервний фінансовий моніторинг (крипта, фіат, P2P-спреди).',
+          'Автоматизований моніторинг цін конкурентів для інтернет-магазинів.',
+          'Скрапінг маркетплейсів та ігрової індустрії (Steam, CS2) для аналітики.'
+        ],
+        technologies: ['Playwright', 'Puppeteer', 'Python', 'Node.js', 'Proxy Rotation', 'BeautifulSoup', 'PostgreSQL']
+      },
+      telegram_bots: {
+        title: 'Розробка телеграм ботів для B2B',
+        tagline: 'Багатоканальні системи сповіщень, автоматизація бізнесу та розумні AI-асистенти.',
+        desc1: 'Ми створюємо не просто чат-боти, а повноцінні екосистеми для вашого бізнесу. Професійна розробка телеграм ботів дозволяє автоматизувати продажі, підтримку клієнтів та внутрішні процеси компанії. У нас ви можете замовити телеграм бота будь-якої складності: від простого віртуального менеджера до комплексної корпоративної ERP-інтеграції.',
+        desc2: 'Наш B2B досвід включає проєктування багатоканальних систем сповіщень та алертів (архітектура AnyAlert) та розробку ботів для P2P-трейдингу, що здійснюють безперервний моніторинг фінансових спредів. Ми також спеціалізуємось на створенні мультиагентних ШІ-систем на базі LLM, створюючи "розумний" telegram бот для магазину, який здатний самостійно консультувати та закривати угоди.',
+        features: [
+          'Розробка ботів для інтернет-магазинів із вбудованою оплатою (Stripe, LiqPay).',
+          'Створення багатоканальних систем алертів (AnyAlert) для корпоративних клієнтів.',
+          'Моніторинг фінансових спредів та автоматизація для P2P-трейдингу.',
+          'Інтеграція мультиагентних ШІ-систем (LLM) для автоматизації підтримки.',
+          'Повна автоматизація бізнесу телеграм: зв\'язок із CRM, Google Sheets, 1C.'
+        ],
+        technologies: ['Node.js (Telegraf)', 'Python (Aiogram)', 'PostgreSQL', 'Redis', 'LLM (OpenAI)', 'Webhooks', 'Stripe / LiqPay']
       }
     },
 
@@ -499,6 +541,48 @@ export const translations = {
           'A/B testing implementation for banner designs and landing page elements.'
         ],
         technologies: ['Meta Ads Manager', 'Google Analytics 4', 'Google Tag Manager', 'SEO Copywriting', 'Ahrefs / SEMrush', 'Figma (Banners)', 'A/B Testing', 'Insta Growth']
+      },
+      ai_integration: {
+        title: 'AI Integration for Business',
+        tagline: 'Autonomous AI agents and seamless ChatGPT integration for routine automation.',
+        desc1: 'Artificial Intelligence in business is no longer the future, but a key competitive advantage. We provide professional AI integration into your existing web applications, CRM systems, and Telegram bots for maximum automation.',
+        desc2: 'Reliable integration of ChatGPT (OpenAI API), Claude, or Groq allows you to delegate customer support, lead processing, and content generation to algorithms. We develop AI for business based on the "Chain of Thought" architecture, ensuring high accuracy and logical decisions without hallucinations.',
+        features: [
+          'Secure integration of ChatGPT and other LLMs into corporate systems.',
+          'Development of autonomous AI agents for data collection and task execution.',
+          'Vector Databases (Pinecone) setup for internal knowledge base search.',
+          'Creation of "smart" consultant bots that sell 24/7.',
+          'AI implementation for financial analytics and monitoring.'
+        ],
+        technologies: ['OpenAI API', 'LangChain', 'Python (FastAPI)', 'Pinecone (Vector DB)', 'Claude 3', 'Groq', 'Next.js']
+      },
+      web_scraping: {
+        title: 'Professional Web Scraping & Data Extraction',
+        tagline: 'Automated web scraping, complex parser development, and continuous market monitoring.',
+        desc1: 'Data is the new oil. We offer professional web scraping of any complexity for the B2B segment. Using modern tools like Playwright and Puppeteer, we successfully bypass Cloudflare, captchas, and complex security mechanisms to extract information from the most challenging dynamic web resources (SPA).',
+        desc2: 'Our experience includes developing high-load continuous monitoring systems: from tracking cryptocurrency spreads (USDT/UAH for P2P trading) to aggregating game statistics and CS2 skin prices. Custom parser development allows you to fully automate competitor price monitoring and instantly react to market changes.',
+        features: [
+          'Scraping dynamic SPA sites (React/Next.js) using Playwright.',
+          'Bypassing Anti-Bot systems (Cloudflare, Datadome) via proxy rotation.',
+          'Continuous financial monitoring (crypto, fiat, P2P spreads).',
+          'Automated competitor price monitoring for e-commerce.',
+          'Marketplaces and gaming industry (Steam, CS2) scraping for analytics.'
+        ],
+        technologies: ['Playwright', 'Puppeteer', 'Python', 'Node.js', 'Proxy Rotation', 'BeautifulSoup', 'PostgreSQL']
+      },
+      telegram_bots: {
+        title: 'Telegram Bot Development for B2B',
+        tagline: 'Multi-channel notification systems, business automation, and smart AI assistants.',
+        desc1: 'We create more than just chatbots; we build complete ecosystems for your business. Professional Telegram bot development allows you to automate sales, customer support, and internal company processes. You can order a Telegram bot of any complexity: from a simple virtual manager to complex corporate ERP integration.',
+        desc2: 'Our B2B experience includes designing multi-channel notification and alert systems (AnyAlert architecture) and developing bots for P2P trading that continuously monitor financial spreads. We also specialize in building multi-agent AI systems based on LLMs, creating "smart" Telegram bots for stores capable of independently consulting and closing deals.',
+        features: [
+          'Development of bots for e-commerce with built-in payments (Stripe, LiqPay).',
+          'Creation of multi-channel alert systems (AnyAlert) for corporate clients.',
+          'Financial spread monitoring and automation for P2P trading.',
+          'Integration of multi-agent AI systems (LLMs) for support automation.',
+          'Complete business automation via Telegram: CRM, Google Sheets, 1C integration.'
+        ],
+        technologies: ['Node.js (Telegraf)', 'Python (Aiogram)', 'PostgreSQL', 'Redis', 'LLM (OpenAI)', 'Webhooks', 'Stripe / LiqPay']
       }
     },
 
