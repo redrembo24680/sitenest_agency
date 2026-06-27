@@ -34,11 +34,11 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://sitenest.work' },
   icons: {
     icon: [
-      { url: '/favicon.ico?v=8', sizes: 'any' },
-      { url: '/icon.png?v=8', type: 'image/png' },
+      { url: '/favicon.ico?v=9', sizes: 'any' },
+      { url: '/icon-opaque.png?v=9', type: 'image/png', sizes: '512x512' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png?v=8', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-touch-icon.png?v=9', sizes: '180x180', type: 'image/png' },
     ],
   },
 };
