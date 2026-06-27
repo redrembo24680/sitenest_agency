@@ -1,8 +1,11 @@
 import { MetadataRoute } from 'next';
-import { BLOG_POSTS } from '@/lib/data';
+import { getBlogPosts } from '@/lib/blog';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://sitenest.work';
+  
+  // Fetch live articles from Keystatic filesystem
+  const posts = await getBlogPosts();
 
   const staticPages = [
     '',
@@ -29,18 +32,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   }));
 
-  const blogPages = BLOG_POSTS.map((post) => ({
-    url: `${baseUrl}/blog/${post.id}`,
-    lastModified: new Date().toISOString().split('T')[0],
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-    alternates: {
-      languages: {
-        'uk-UA': `${baseUrl}/blog/${post.id}`,
-        'en-US': `${baseUrl}/en/blog/${post.id}`,
+  const blogPages = posts.map((post) => {
+    const slug = post.slug;
+    const isEn = post.entry.language === 'en';
+    const lastMod = post.entry.date || new Date().toISOString().split('T')[0];
+
+    return {
+      url: isEn ? `${baseUrl}/en/blog/${slug}` : `${baseUrl}/blog/${slug}`,
+      lastModified: lastMod,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+      alternates: {
+        languages: {
+          'uk-UA': `${baseUrl}/blog/${slug}`,
+          'en-US': `${baseUrl}/en/blog/${slug}`,
+        },
       },
-    },
-  }));
+    };
+  });
 
   return [...staticPages, ...blogPages];
 }

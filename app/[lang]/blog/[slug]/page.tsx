@@ -1,21 +1,52 @@
-'use client';
-
-import React, { use } from 'react';
+import React from 'react';
 import { Link } from '@/components/Link';
 import Image from 'next/image';
 import { ArrowLeft, Share2 } from 'lucide-react';
 import { MemberAvatar } from '@/components/MemberAvatar';
-import { BLOG_POSTS } from '@/lib/data';
-import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { getBlogPostBySlug, getBlogPosts } from '@/lib/blog';
+import { translations } from '@/lib/i18n/translations';
+import { DocumentRenderer } from '@keystatic/core/renderer';
+import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 interface BlogPostPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: 'uk' | 'en'; slug: string }>;
 }
 
-export default function BlogPostDetail({ params }: BlogPostPageProps) {
-  const { slug } = use(params);
-  const { t } = useLanguage();
-  const post = BLOG_POSTS.find(p => p.id === slug);
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const { lang, slug } = await params;
+  const post = await getBlogPostBySlug(slug);
+  const t = translations[lang];
+  
+  if (!post) {
+    return {
+      title: t.blog.notFound,
+    };
+  }
+
+  return {
+    title: `${post.title} | SiteNest Blog`,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      images: post.coverImage ? [{ url: post.coverImage }] : [],
+    },
+  };
+}
+
+export async function generateStaticParams() {
+  const posts = await getBlogPosts();
+  return posts.map((post) => ({
+    lang: post.entry.language,
+    slug: post.slug,
+  }));
+}
+
+export default async function BlogPostDetail({ params }: BlogPostPageProps) {
+  const { lang, slug } = await params;
+  const t = translations[lang];
+  const post = await getBlogPostBySlug(slug);
   
   if (!post) {
     return (
@@ -28,6 +59,29 @@ export default function BlogPostDetail({ params }: BlogPostPageProps) {
     );
   }
 
+  // Redirect to correct language if there is a mismatch
+  if (post.language !== lang) {
+    if (lang === 'en') {
+      const enSlug = `${slug}-en`;
+      const enPost = await getBlogPostBySlug(enSlug);
+      if (enPost) {
+        redirect(`/en/blog/${enSlug}`);
+      }
+    } else {
+      const ukSlug = slug.endsWith('-en') ? slug.slice(0, -3) : slug;
+      const ukPost = await getBlogPostBySlug(ukSlug);
+      if (ukPost) {
+        redirect(`/blog/${ukSlug}`);
+      }
+    }
+    // Fallback redirect if no cross-language slug match exists
+    const targetUrl = post.language === 'en' ? `/en/blog/${slug}` : `/blog/${slug}`;
+    redirect(targetUrl);
+  }
+
+  // Load and parse the document content
+  const content = await post.content();
+
   return (
     <div className="page-fade-enter">
       <section className="post-layout container">
@@ -37,12 +91,12 @@ export default function BlogPostDetail({ params }: BlogPostPageProps) {
             <span>&bull;</span>
             <span>{post.date}</span>
             <span>&bull;</span>
-            <span>{post.time}</span>
+            <span>{post.readTime}</span>
           </div>
           <h1>{post.title}</h1>
           <div className="post-author-box">
             <div className="author-avatar">
-              <MemberAvatar colorClass={post.id} devType={post.category} />
+              <MemberAvatar colorClass={slug} devType={post.category} />
             </div>
             <div style={{ textAlign: 'left' }}>
               <div className="author-name">{post.author}</div>
@@ -52,24 +106,24 @@ export default function BlogPostDetail({ params }: BlogPostPageProps) {
         </div>
 
         <div className="post-cover-image">
-          {post.image ? (
-            <Image src={post.image} alt={post.title} className="blog-cover-img-full" width={1200} height={600} />
+          {post.coverImage ? (
+            <Image src={post.coverImage} alt={post.title} className="blog-cover-img-full" width={1200} height={600} priority />
           ) : (
-            <MemberAvatar colorClass={post.id} devType={post.category} />
+            <MemberAvatar colorClass={slug} devType={post.category} />
           )}
         </div>
 
         <div className="post-grid">
-          <article className="post-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+          <article className="post-content">
+            <DocumentRenderer document={content} />
+          </article>
           
           <aside className="post-sidebar">
             <div className="sidebar-widget">
               <h4>{t.blog.tableOfContents}</h4>
               <ul className="toc-list">
-                <li className="toc-link">1. {t.blog.tableOfContents}</li>
-                <li className="toc-link">2. Практичні поради</li>
-                <li className="toc-link">3. Методи оптимізації</li>
-                <li className="toc-link">4. Результати для бізнесу</li>
+                <li className="toc-link">1. {post.title}</li>
+                <li className="toc-link">2. {post.description}</li>
               </ul>
             </div>
 

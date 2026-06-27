@@ -7,10 +7,11 @@ const defaultLocale = 'uk';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
-  // Exclude static files, API, and Next.js internals
+  // Exclude static files, API, Keystatic, and Next.js internals
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
+    pathname.startsWith('/keystatic') ||
     pathname.match(/\.(.*)$/)
   ) {
     return NextResponse.next();
