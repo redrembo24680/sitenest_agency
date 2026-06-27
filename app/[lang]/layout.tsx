@@ -8,7 +8,7 @@ import '../globals.css';
 
 import { headers } from 'next/headers';
 
-export async function generateMetadata({ params }: { params: { lang: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   const lang = resolvedParams.lang || 'uk';
   const url = 'https://sitenest.work';
@@ -85,7 +85,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-export default async function RootLayout({ children, params }: { children: React.ReactNode, params: { lang: string } }) {
+export default async function RootLayout({ children, params }: { children: React.ReactNode, params: Promise<{ lang: string }> }) {
   const resolvedParams = await params;
   const lang = resolvedParams.lang || 'uk';
   const jsonLd = {
