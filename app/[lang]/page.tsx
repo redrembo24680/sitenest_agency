@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import Image from 'next/image';
 import { ArrowRight, ChevronRight, Code, Server, Cpu, TrendingUp, Send } from 'lucide-react';
 import { LogoIcon } from '@/components/LogoIcon';
