@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date().toISOString().split('T')[0],
     changeFrequency: 'weekly' as const,
     priority: route === '' ? 1.0 : 0.8,
+    alternates: {
+      languages: {
+        'uk-UA': `${baseUrl}${route}`,
+        'en-US': `${baseUrl}/en${route}`,
+      },
+    },
   }));
 
   const blogPages = BLOG_POSTS.map((post) => ({
@@ -28,6 +34,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date().toISOString().split('T')[0],
     changeFrequency: 'monthly' as const,
     priority: 0.6,
+    alternates: {
+      languages: {
+        'uk-UA': `${baseUrl}/blog/${post.id}`,
+        'en-US': `${baseUrl}/en/blog/${post.id}`,
+      },
+    },
   }));
 
   return [...staticPages, ...blogPages];

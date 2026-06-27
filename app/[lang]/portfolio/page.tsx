@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import Image from 'next/image';
 import { ChevronRight, X, ExternalLink, TrendingUp, Users, Zap } from 'lucide-react';
 import { PORTFOLIO_PROJECTS } from '@/lib/data';

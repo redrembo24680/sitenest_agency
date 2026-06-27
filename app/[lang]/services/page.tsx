@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import { Check, ArrowRight, Rocket, Award, Zap } from 'lucide-react';
 import { FrontendVisual, BackendVisual, DevopsVisual, SmmVisual } from '@/components/ServiceCodeMockups';
 import { useLanguage } from '@/lib/i18n/LanguageContext';

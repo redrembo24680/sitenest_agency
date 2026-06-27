@@ -1,7 +1,7 @@
 'use client';
 
 import React, { use } from 'react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import Image from 'next/image';
 import { ArrowLeft, Share2 } from 'lucide-react';
 import { MemberAvatar } from '@/components/MemberAvatar';
