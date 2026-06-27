@@ -2,7 +2,7 @@ import { config, fields, collection } from '@keystatic/core';
 
 export default config({
   storage:
-    process.env.NODE_ENV === 'production' && process.env.KEYSTATIC_GITHUB_CLIENT_ID
+    process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_VERCEL_ENV
       ? {
           kind: 'github',
           repo: 'redrembo24680/sitenest_agency',
