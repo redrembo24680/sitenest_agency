@@ -130,7 +130,7 @@ export const translations = {
 
     // SERVICE DETAILS
     serviceDetails: {
-      backBtn: '← Назад до послуг',
+      backBtn: 'Назад до послуг',
       ctaTitle: 'Готові обговорити проект?',
       ctaDesc: 'Зв’яжіться з нами, щоб отримати персоналізовану пропозицію та безкоштовну консультацію від наших експертів.',
       ctaBtn: 'Почати проект',
@@ -573,7 +573,7 @@ export const translations = {
 
     // SERVICE DETAILS
     serviceDetails: {
-      backBtn: '← Back to services',
+      backBtn: 'Back to services',
       ctaTitle: 'Ready to discuss your project?',
       ctaDesc: 'Get in touch with us to receive a personalized proposal and free consultation from our experts.',
       ctaBtn: 'Start a Project',
