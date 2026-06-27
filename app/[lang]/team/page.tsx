@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { MemberAvatar } from '@/components/MemberAvatar';
@@ -11,6 +11,17 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 export default function Team() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    if (selectedMember) {
+      setTimeout(() => {
+        const textElement = document.querySelector('.modal-right h2');
+        if (textElement) {
+          textElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  }, [selectedMember]);
 
   return (
     <div className="page-fade-enter">
