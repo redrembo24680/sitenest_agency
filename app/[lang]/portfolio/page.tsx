@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '@/components/Link';
 import Image from 'next/image';
 import { ChevronRight, X, ExternalLink, TrendingUp, Users, Zap } from 'lucide-react';
@@ -60,6 +60,17 @@ export default function Portfolio() {
   const { t, lang } = useLanguage();
   const [filter, setFilter] = useState('all');
   const [selected, setSelected] = useState<typeof EXTENDED_PORTFOLIO[0] | null>(null);
+
+  useEffect(() => {
+    if (selected) {
+      setTimeout(() => {
+        const textElement = document.querySelector('.portfolio-modal-body h2');
+        if (textElement) {
+          textElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  }, [selected]);
 
   const filtered = EXTENDED_PORTFOLIO.filter(
     (p) => filter === 'all' || p.cat === filter
