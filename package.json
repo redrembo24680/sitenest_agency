@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run translate && next build",
+    "build": "next build",
     "start": "next start",
     "translate": "node scripts/translate.js"
   },
