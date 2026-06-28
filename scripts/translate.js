@@ -105,30 +105,39 @@ async function run() {
     const frontmatterRaw = parts[1];
     const bodyContent = parts.slice(2).join('---');
 
-    // Parse frontmatter lines
+    // Parse frontmatter lines using a simple multi-line aware parser
     const fmLines = frontmatterRaw.split('\n');
     const fmData = {};
-    const otherFmLines = [];
+    let currentKey = null;
+    let currentValue = [];
 
     for (const line of fmLines) {
-      const trimmed = line.trim();
-      if (!trimmed) continue;
-      
-      const colonIdx = trimmed.indexOf(':');
-      if (colonIdx === -1) {
-        otherFmLines.push(line);
-        continue;
+      const match = line.match(/^([a-zA-Z0-9_-]+):\s*(.*)/);
+      if (match) {
+        if (currentKey) {
+          fmData[currentKey] = currentValue.join('\n').trim();
+        }
+        currentKey = match[1];
+        const rest = match[2].trim();
+        if (rest === '>-' || rest === '|') {
+          currentValue = [];
+        } else {
+          currentValue = [rest];
+        }
+      } else if (currentKey && line.startsWith('  ')) {
+        currentValue.push(line.slice(2));
       }
+    }
+    if (currentKey) {
+      fmData[currentKey] = currentValue.join('\n').trim();
+    }
 
-      const key = trimmed.slice(0, colonIdx).trim();
-      let val = trimmed.slice(colonIdx + 1).trim();
-
-      // Strip outer quotes if any
+    // Strip outer quotes if any
+    for (const key in fmData) {
+      let val = fmData[key];
       if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        val = val.slice(1, -1);
+        fmData[key] = val.slice(1, -1);
       }
-
-      fmData[key] = val;
     }
 
     // Translate fields
