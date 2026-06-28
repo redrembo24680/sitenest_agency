@@ -1,5 +1,17 @@
 import { createReader } from '@keystatic/core/reader';
 import config from '@/keystatic.config';
+import fs from 'fs';
+import path from 'path';
+
+// Force Next.js to trace and include the content directory in the Vercel deployment
+try {
+  const contentPath = path.join(process.cwd(), 'content/blog');
+  if (fs.existsSync(contentPath)) {
+    fs.readdirSync(contentPath);
+  }
+} catch (e) {
+  // Ignore errors
+}
 
 export const reader = createReader(process.cwd(), config);
 

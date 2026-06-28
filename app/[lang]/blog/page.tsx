@@ -5,6 +5,13 @@ interface BlogPageProps {
   params: Promise<{ lang: 'uk' | 'en' }>;
 }
 
+export async function generateStaticParams() {
+  return [
+    { lang: 'uk' },
+    { lang: 'en' },
+  ];
+}
+
 export default async function BlogPage({ params }: BlogPageProps) {
   const { lang } = await params;
   const allPosts = await getBlogPosts();
