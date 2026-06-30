@@ -7,30 +7,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch live articles from Keystatic filesystem
   const posts = await getBlogPosts();
 
-  const staticPages = [
+  const routes = [
     '',
     '/services',
     '/services/frontend',
     '/services/backend',
     '/services/devops',
     '/services/smm',
+    '/services/ai-integration',
+    '/services/web-scraping',
+    '/services/telegram-bots',
     '/team',
     '/blog',
     '/contact',
     '/process',
     '/portfolio',
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date().toISOString().split('T')[0],
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : 0.8,
-    alternates: {
+  ];
+
+  const staticPages: MetadataRoute.Sitemap = [];
+
+  routes.forEach((route) => {
+    const alternates = {
       languages: {
         'uk-UA': `${baseUrl}${route}`,
         'en-US': `${baseUrl}/en${route}`,
       },
-    },
-  }));
+    };
+
+    // Ukrainian version
+    staticPages.push({
+      url: `${baseUrl}${route}`,
+      lastModified: new Date().toISOString().split('T')[0],
+      changeFrequency: 'weekly' as const,
+      priority: route === '' ? 1.0 : 0.8,
+      alternates,
+    });
+
+    // English version
+    staticPages.push({
+      url: `${baseUrl}/en${route}`,
+      lastModified: new Date().toISOString().split('T')[0],
+      changeFrequency: 'weekly' as const,
+      priority: route === '' ? 1.0 : 0.8,
+      alternates,
+    });
+  });
 
   const blogPages = posts.map((post) => {
     const slug = post.slug;
