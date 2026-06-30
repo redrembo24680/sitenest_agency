@@ -34,18 +34,32 @@ function extractFrontmatter(content: string): Record<string, string> {
 }
 
 /**
- * Removes the coverImage field from YAML frontmatter.
- * Handles both single-line and multi-line block scalar (>-) values.
+ * Transforms the frontmatter to match Keystatic's expected format:
+ * - title is stored as a nested object: { name: '...', slug: '...' }
+ * - coverImage is removed (user attaches manually in Keystatic)
  */
-function stripCoverImage(content: string): string {
+function transformFrontmatter(content: string, slug: string): string {
   return content.replace(
     /^(---\r?\n)([\s\S]*?)(\r?\n---)/,
     (_full, open, fm, close) => {
-      const cleaned = fm
+      // Extract the raw title value (handle single/double quotes and plain text)
+      const titleMatch = fm.match(/^title:\s*['"]?(.*?)['"]?\s*$/m);
+      const rawTitle = titleMatch ? titleMatch[1].trim() : slug;
+
+      // Remove the old title line
+      let cleaned = fm.replace(/^title:.*\r?\n?/m, '');
+
+      // Remove coverImage (single-line and multi-line block scalar)
+      cleaned = cleaned
         .replace(/^coverImage:\s*>-?\r?\n(?:[ \t]+[^\n]*\r?\n?)+/m, '')
         .replace(/^coverImage:.*\r?\n?/m, '')
-        .replace(/\n{3,}/g, '\n\n');
-      return `${open}${cleaned}${close}`;
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      // Build the new Keystatic slug-formatted title at the top
+      const keystatiTitle = `title:\n  name: '${rawTitle.replace(/'/g, "\\'")}'\n  slug: ${slug}`;
+
+      return `${open}${keystatiTitle}\n${cleaned}${close}`;
     }
   );
 }
@@ -144,8 +158,8 @@ export async function POST(req: NextRequest) {
     }
     slug = slug.replace(/[^a-zA-Z0-9а-яёіїєґА-ЯЁІЇЄҐ_-]/g, '-').replace(/-+/g, '-');
 
-    // Strip coverImage — user will attach it manually in Keystatic
-    const cleanedContent = stripCoverImage(content);
+    // Transform frontmatter: convert title to Keystatic slug format + strip coverImage
+    const cleanedContent = transformFrontmatter(content, slug);
 
     // VERCEL is set to "1" by Vercel on all deployments (system env var)
     const isProduction = process.env.VERCEL === '1';
