@@ -469,12 +469,20 @@ export default function ImportBlogPage() {
                     ) : null
                   )}
                 </div>
-                {fm.coverImage && (
+                {fm.coverImage ? (
                   <div>
                     <div style={{ fontSize: 11, color: '#475569', marginBottom: 3 }}>🖼 Обкладинка</div>
-                    <code style={{ fontSize: 11, color: '#818cf8', background: '#0f172a', padding: '4px 8px', borderRadius: 5, wordBreak: 'break-all' }}>
-                      {fm.coverImage}
-                    </code>
+                    <div style={{ padding: '8px 10px', borderRadius: 6, background: '#422006', border: '1px solid #92400e', fontSize: 12, color: '#fbbf24', display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                      <span style={{ flexShrink: 0 }}>⚠️</span>
+                      <span>Шлях до зображення буде <strong>проігноровано</strong> при імпорті. Додайте обкладинку вручну в Keystatic після імпорту.</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ fontSize: 11, color: '#475569', marginBottom: 3 }}>🖼 Обкладинка</div>
+                    <div style={{ padding: '8px 10px', borderRadius: 6, background: '#0f172a', border: '1px solid #1e293b', fontSize: 12, color: '#475569' }}>
+                      Не вказана — додасте вручну в Keystatic
+                    </div>
                   </div>
                 )}
               </div>

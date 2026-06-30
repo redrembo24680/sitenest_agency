@@ -36,6 +36,27 @@ function extractFrontmatter(content: string): { frontmatter: Record<string, stri
   return { frontmatter, body: match[2] };
 }
 
+/**
+ * Removes the coverImage field from YAML frontmatter.
+ * Handles both single-line and multi-line block scalar (>-) values.
+ */
+function stripCoverImage(content: string): string {
+  // Match the frontmatter block
+  return content.replace(
+    /^(---\r?\n)([\s\S]*?)(\r?\n---)/,
+    (_full, open, fm, close) => {
+      const cleaned = fm
+        // Remove multi-line block scalar: "coverImage: >-\n  /path/...\n"
+        .replace(/^coverImage:\s*>-?\r?\n(?:[ \t]+[^\n]*\r?\n?)+/m, '')
+        // Remove single-line: "coverImage: /path/..."
+        .replace(/^coverImage:.*\r?\n?/m, '')
+        // Clean up any double blank lines left behind
+        .replace(/\n{3,}/g, '\n\n');
+      return `${open}${cleaned}${close}`;
+    }
+  );
+}
+
 export async function POST(req: NextRequest) {
   if (!isAuthorized(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -80,7 +101,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    fs.writeFileSync(filePath, content, 'utf-8');
+    // Strip coverImage — user will attach it manually in Keystatic
+    const cleanedContent = stripCoverImage(content);
+
+    fs.writeFileSync(filePath, cleanedContent, 'utf-8');
 
     return NextResponse.json({
       success: true,
