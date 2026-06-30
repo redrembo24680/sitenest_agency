@@ -63,11 +63,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     },
     icons: {
       icon: [
-        { url: '/favicon.ico?v=9', sizes: 'any' },
-        { url: '/icon-opaque.png?v=9', type: 'image/png', sizes: '512x512' },
+        { url: 'https://sitenest.work/icon-48x48.png?v=11', type: 'image/png', sizes: '48x48' },
+        { url: 'https://sitenest.work/icon-192x192.png?v=11', type: 'image/png', sizes: '192x192' },
       ],
       apple: [
-        { url: '/apple-touch-icon.png?v=9', sizes: '180x180', type: 'image/png' },
+        { url: 'https://sitenest.work/apple-touch-icon.png?v=11', sizes: '180x180', type: 'image/png' },
       ],
     },
   };
