@@ -2,13 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-// Only allow in development or with a secret token
-function isAuthorized(req: NextRequest): boolean {
-  if (process.env.NODE_ENV === 'development') return true;
-  const token = req.headers.get('x-import-token');
-  return token === process.env.IMPORT_SECRET;
-}
+// ─── Config ──────────────────────────────────────────────────────────────────
+const GITHUB_REPO = 'redrembo24680/sitenest_agency';
+const GITHUB_BRANCH = 'main';
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 function slugify(str: string): string {
   return str
     .toLowerCase()
@@ -18,22 +16,18 @@ function slugify(str: string): string {
     .trim();
 }
 
-function extractFrontmatter(content: string): { frontmatter: Record<string, string>; body: string } {
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-  if (!match) return { frontmatter: {}, body: content };
-
-  const frontmatter: Record<string, string> = {};
-  const lines = match[1].split('\n');
-
-  for (const line of lines) {
+function extractFrontmatter(content: string): Record<string, string> {
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return {};
+  const result: Record<string, string> = {};
+  for (const line of match[1].split('\n')) {
     const colonIdx = line.indexOf(':');
     if (colonIdx === -1) continue;
     const key = line.slice(0, colonIdx).trim();
     const value = line.slice(colonIdx + 1).trim().replace(/^['"]|['"]$/g, '');
-    if (key && value) frontmatter[key] = value;
+    if (key && value) result[key] = value;
   }
-
-  return { frontmatter, body: match[2] };
+  return result;
 }
 
 /**
@@ -41,79 +35,160 @@ function extractFrontmatter(content: string): { frontmatter: Record<string, stri
  * Handles both single-line and multi-line block scalar (>-) values.
  */
 function stripCoverImage(content: string): string {
-  // Match the frontmatter block
   return content.replace(
     /^(---\r?\n)([\s\S]*?)(\r?\n---)/,
     (_full, open, fm, close) => {
       const cleaned = fm
-        // Remove multi-line block scalar: "coverImage: >-\n  /path/...\n"
         .replace(/^coverImage:\s*>-?\r?\n(?:[ \t]+[^\n]*\r?\n?)+/m, '')
-        // Remove single-line: "coverImage: /path/..."
         .replace(/^coverImage:.*\r?\n?/m, '')
-        // Clean up any double blank lines left behind
         .replace(/\n{3,}/g, '\n\n');
       return `${open}${cleaned}${close}`;
     }
   );
 }
 
-export async function POST(req: NextRequest) {
-  if (!isAuthorized(req)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+// ─── GitHub API: create or update a file ─────────────────────────────────────
+async function writeToGitHub(
+  filePath: string,
+  content: string,
+  overwrite: boolean
+): Promise<{ slug: string; alreadyExists?: boolean }> {
+  const token = process.env.GITHUB_PAT;
+  if (!token) {
+    throw new Error(
+      'GITHUB_PAT environment variable is not set. ' +
+      'Add it in Vercel → Settings → Environment Variables.'
+    );
   }
 
+  const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/vnd.github+json',
+    'Content-Type': 'application/json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+
+  // Check if file already exists (get its SHA for update)
+  let existingSha: string | undefined;
+  const checkRes = await fetch(apiUrl, { headers });
+  if (checkRes.ok) {
+    const existing = await checkRes.json();
+    existingSha = existing.sha;
+    if (!overwrite) {
+      throw Object.assign(
+        new Error(`File already exists: ${filePath}`),
+        { code: 'EXISTS', slug: filePath }
+      );
+    }
+  }
+
+  // Create or update the file
+  const body: Record<string, string> = {
+    message: `📥 Import blog post: ${filePath}`,
+    content: Buffer.from(content, 'utf-8').toString('base64'),
+    branch: GITHUB_BRANCH,
+  };
+  if (existingSha) body.sha = existingSha;
+
+  const putRes = await fetch(apiUrl, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!putRes.ok) {
+    const err = await putRes.json().catch(() => ({}));
+    throw new Error(`GitHub API error: ${putRes.status} — ${(err as {message?: string}).message ?? 'unknown'}`);
+  }
+
+  return { slug: filePath };
+}
+
+// ─── Filesystem write (development only) ────────────────────────────────────
+function writeToFilesystem(slug: string, content: string, overwrite: boolean): void {
+  const blogDir = path.join(process.cwd(), 'content', 'blog');
+  const filePath = path.join(blogDir, `${slug}.mdoc`);
+
+  if (!filePath.startsWith(blogDir)) throw new Error('Invalid filename');
+
+  if (!overwrite && fs.existsSync(filePath)) {
+    throw Object.assign(new Error(`File already exists: ${slug}.mdoc`), { code: 'EXISTS' });
+  }
+
+  fs.writeFileSync(filePath, content, 'utf-8');
+}
+
+// ─── Route handler ───────────────────────────────────────────────────────────
+export async function POST(req: NextRequest) {
   try {
-    const { content, filename, overwrite } = await req.json();
+    const { content, filename, overwrite = false } = await req.json();
 
     if (!content || typeof content !== 'string') {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
-    const { frontmatter } = extractFrontmatter(content);
+    const frontmatter = extractFrontmatter(content);
 
-    // Determine the filename/slug
+    // Determine slug
     let slug: string;
     if (filename) {
-      // Use provided filename (strip .mdoc extension if present)
       slug = filename.replace(/\.mdoc$/, '');
     } else if (frontmatter.title) {
       slug = slugify(frontmatter.title);
     } else {
       slug = `blog-${Date.now()}`;
     }
-
-    // Sanitize slug — only allow safe filesystem characters
     slug = slug.replace(/[^a-zA-Z0-9а-яёіїєґА-ЯЁІЇЄҐ_-]/g, '-').replace(/-+/g, '-');
-
-    const blogDir = path.join(process.cwd(), 'content', 'blog');
-    const filePath = path.join(blogDir, `${slug}.mdoc`);
-
-    // Check for path traversal attacks
-    if (!filePath.startsWith(blogDir)) {
-      return NextResponse.json({ error: 'Invalid filename' }, { status: 400 });
-    }
-
-    // Check if file already exists (unless overwrite is requested)
-    if (!overwrite && fs.existsSync(filePath)) {
-      return NextResponse.json(
-        { error: `File already exists: ${slug}.mdoc`, slug },
-        { status: 409 }
-      );
-    }
 
     // Strip coverImage — user will attach it manually in Keystatic
     const cleanedContent = stripCoverImage(content);
 
-    fs.writeFileSync(filePath, cleanedContent, 'utf-8');
+    const isProduction =
+      process.env.NODE_ENV === 'production' &&
+      process.env.NEXT_PUBLIC_VERCEL_ENV !== undefined;
+
+    if (isProduction) {
+      // ── Production: commit to GitHub ──────────────────────────────────────
+      const ghPath = `content/blog/${slug}.mdoc`;
+      try {
+        await writeToGitHub(ghPath, cleanedContent, overwrite);
+      } catch (err) {
+        const e = err as Error & { code?: string };
+        if (e.code === 'EXISTS') {
+          return NextResponse.json(
+            { error: `File already exists: ${slug}.mdoc`, slug },
+            { status: 409 }
+          );
+        }
+        throw err;
+      }
+    } else {
+      // ── Development: write to filesystem ─────────────────────────────────
+      try {
+        writeToFilesystem(slug, cleanedContent, overwrite);
+      } catch (err) {
+        const e = err as Error & { code?: string };
+        if (e.code === 'EXISTS') {
+          return NextResponse.json(
+            { error: `File already exists: ${slug}.mdoc`, slug },
+            { status: 409 }
+          );
+        }
+        throw err;
+      }
+    }
 
     return NextResponse.json({
       success: true,
       slug,
       filename: `${slug}.mdoc`,
       path: `content/blog/${slug}.mdoc`,
+      via: isProduction ? 'github' : 'filesystem',
     });
   } catch (err) {
     console.error('[import-blog]', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
