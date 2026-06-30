@@ -1,3 +1,5 @@
+import ImportButton from './ImportButton';
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -7,6 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body style={{ margin: 0, padding: 0 }}>
         {children}
+        <ImportButton />
       </body>
     </html>
   );
