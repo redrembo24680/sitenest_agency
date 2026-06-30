@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+// Force Node.js runtime — required for 'fs' and GitHub fetch in production
+export const runtime = 'nodejs';
+
 // ─── Config ──────────────────────────────────────────────────────────────────
 const GITHUB_REPO = 'redrembo24680/sitenest_agency';
 const GITHUB_BRANCH = 'main';
@@ -144,9 +147,8 @@ export async function POST(req: NextRequest) {
     // Strip coverImage — user will attach it manually in Keystatic
     const cleanedContent = stripCoverImage(content);
 
-    const isProduction =
-      process.env.NODE_ENV === 'production' &&
-      process.env.NEXT_PUBLIC_VERCEL_ENV !== undefined;
+    // VERCEL is set to "1" by Vercel on all deployments (system env var)
+    const isProduction = process.env.VERCEL === '1';
 
     if (isProduction) {
       // ── Production: commit to GitHub ──────────────────────────────────────
