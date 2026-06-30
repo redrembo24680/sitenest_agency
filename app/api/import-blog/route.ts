@@ -35,22 +35,32 @@ function extractFrontmatter(content: string): Record<string, string> {
 
 /**
  * Transforms the frontmatter for Keystatic compatibility:
+ * - Keeps title as a plain string (fields.text)
+ * - Adds a slug field (fields.slug, used as slugField) with name+slug
  * - Strips coverImage (user attaches manually in Keystatic)
- * - Keeps title as a plain string (fields.slug reads it from the YAML value)
  */
-function transformFrontmatter(content: string, _slug: string): string {
+function transformFrontmatter(content: string, slug: string): string {
   return content.replace(
     /^(---\r?\n)([\s\S]*?)(\r?\n---)/,
     (_full, open, fm, close) => {
-      const cleaned = fm
-        // Remove multi-line block scalar coverImage
+      // Extract plain title value
+      const titleMatch = fm.match(/^title:\s*['"]?(.*?)['"]?\s*$/m);
+      const rawTitle = titleMatch ? titleMatch[1].trim() : slug;
+
+      let cleaned = fm
+        // Remove coverImage (single-line and multi-line)
         .replace(/^coverImage:\s*>-?\r?\n(?:[ \t]+[^\n]*\r?\n?)+/m, '')
-        // Remove single-line coverImage
         .replace(/^coverImage:.*\r?\n?/m, '')
-        // Clean up extra blank lines
+        // Remove any existing slug field (will re-add below)
+        .replace(/^slug:.*\r?\n?/m, '')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
-      return `${open}${cleaned}${close}`;
+
+      // Build slug field in Keystatic's nested format
+      const safeTitle = rawTitle.replace(/'/g, "\\'");
+      const slugField = `slug:\n  name: '${safeTitle}'\n  slug: ${slug}`;
+
+      return `${open}${cleaned}\n${slugField}${close}`;
     }
   );
 }

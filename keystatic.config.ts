@@ -13,14 +13,16 @@ export default config({
   collections: {
     blog: collection({
       label: 'Блог (Статті)',
-      slugField: 'title',
+      slugField: 'slug',
       path: 'content/blog/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       previewUrl: '/blog/{slug}',
       schema: {
-        title: fields.slug({ name: { label: 'Заголовок' } }),
-        description: fields.text({ label: 'Короткий опис (для SEO та прев\'ю)', multiline: true, validation: { length: { min: 1 } } }),
+        // slug is the slugField — derived from the filename, edited separately
+        slug: fields.slug({ name: { label: 'Slug (URL)' } }),
+        title: fields.text({ label: 'Заголовок', validation: { length: { min: 1 } } }),
+        description: fields.text({ label: "Короткий опис (для SEO та прев'ю)", multiline: true, validation: { length: { min: 1 } } }),
         date: fields.date({ label: 'Дата публікації', defaultValue: { kind: 'today' } }),
         coverImage: fields.image({
           label: 'Обкладинка статті',
