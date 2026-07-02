@@ -42,6 +42,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* Safari iOS tap highlight */
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -50,6 +52,8 @@ html {
   background-color: var(--bg-dark);
   overflow-x: hidden;
   width: 100%;
+  /* iOS Safari scroll momentum */
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -60,6 +64,12 @@ body {
   overflow-x: hidden;
   position: relative;
   width: 100%;
+  /* Firefox scrollbar style */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.08) var(--bg-darker);
+  /* Safe area insets for iPhone notch/Dynamic Island */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 /* Spinner for Suspense fallback */
@@ -67,7 +77,7 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar — Webkit (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -79,7 +89,7 @@ body {
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gradient-neon);
+  background: rgba(255, 94, 0, 0.5);
 }
 
 a {
@@ -92,6 +102,8 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
+  /* Prevent broken image icon from being ugly */
+  color: transparent;
 }
 
 input, textarea, select, button {
@@ -99,6 +111,16 @@ input, textarea, select, button {
   background: none;
   border: none;
   color: inherit;
+  /* Safari resets */
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+/* Safari: prevent text resize on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* --- STRUCTURE / LAYOUT --- */
@@ -128,7 +150,9 @@ input, textarea, select, button {
 .section-title span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent; /* Firefox fallback */
   display: inline-block;
   position: relative;
 }
@@ -210,7 +234,9 @@ input, textarea, select, button {
 
 /* --- GLASSMORPHISM CARD COMMON --- */
 .glass-card {
-  background: var(--bg-card);
+  /* Solid fallback for browsers without backdrop-filter */
+  background: rgba(13, 16, 26, 0.92);
+  /* Modern browsers with backdrop-filter support */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glow);
@@ -221,6 +247,13 @@ input, textarea, select, button {
   position: relative;
   overflow: hidden;
   z-index: 2;
+}
+
+/* Override with transparent version when backdrop-filter is supported */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .glass-card {
+    background: var(--bg-card);
+  }
 }
 
 .glass-card::before {
@@ -257,6 +290,8 @@ header.scrolled {
 }
 
 header .nav-container {
+  /* Fallback for browsers without backdrop-filter (old Firefox) */
+  background: rgba(4, 5, 9, 0.85);
   background: rgba(4, 5, 9, 0.45);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -292,7 +327,9 @@ header .nav-container {
 .logo-text span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .nav-links {
@@ -513,7 +550,9 @@ header .nav-container {
 .hero h1 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
   display: inline-block;
 }
 
@@ -666,7 +705,9 @@ header .nav-container {
   font-weight: 800;
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
   margin-bottom: 0.3rem;
   letter-spacing: -1px;
 }
@@ -783,6 +824,7 @@ header .nav-container {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
+  /* aspect-ratio supported in all modern browsers (Safari 15+, Chrome 88+, Firefox 89+) */
   aspect-ratio: 4/3;
   cursor: pointer;
   border: 1px solid var(--border-glow);
@@ -794,6 +836,9 @@ header .nav-container {
   height: 100%;
   object-fit: cover;
   transition: var(--transition-slow);
+  /* Ensure proper rendering in Safari */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .portfolio-overlay {
@@ -880,7 +925,9 @@ header .nav-container {
 .cta-banner h2 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .cta-banner p {
@@ -1034,7 +1081,9 @@ footer {
 .services-hero h1 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .services-hero p {
@@ -1318,14 +1367,19 @@ footer {
 
 .calc-slider {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 5px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.08);
   outline: none;
   margin-bottom: 0.75rem;
+  cursor: pointer;
+  /* Firefox track color */
+  accent-color: var(--color-blue);
 }
 
+/* Webkit (Chrome, Safari, Edge) thumb */
 .calc-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1341,6 +1395,32 @@ footer {
 
 .calc-slider::-webkit-slider-thumb:hover {
   transform: scale(1.15);
+}
+
+/* Firefox thumb */
+.calc-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+  border: 3.5px solid var(--color-blue);
+  transition: var(--transition-fast);
+}
+
+/* Firefox track */
+.calc-slider::-moz-range-track {
+  height: 5px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Firefox progress fill */
+.calc-slider::-moz-range-progress {
+  height: 5px;
+  border-radius: 10px;
+  background: var(--color-blue);
 }
 
 .calc-addons-grid {
@@ -1471,7 +1551,9 @@ footer {
 .team-hero h1 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .team-hero p {
@@ -1501,6 +1583,9 @@ footer {
   border: 1px solid var(--border-glow);
   box-shadow: var(--shadow-card);
   transition: var(--transition-medium);
+  /* Safari: force GPU acceleration for smooth animation */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .team-card:hover .team-card-inner {
@@ -1749,7 +1834,9 @@ footer {
 .blog-hero h1 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .blog-hero p {
@@ -1976,6 +2063,8 @@ footer {
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--border-glow);
+  /* Prevent Safari from collapsing element before image loads */
+  min-height: 200px;
 }
 
 .post-cover-image svg {
@@ -2142,7 +2231,9 @@ footer {
 .contact-info-section h1 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .contact-info-section > p {
@@ -2228,11 +2319,17 @@ footer {
   width: 100%;
   background: rgba(255, 255, 255, 0.015);
   border: 1.5px solid rgba(255, 255, 255, 0.06);
+  /* Explicit border-radius: global input reset sets it to 0 for Safari */
   border-radius: 12px;
   padding: 0.9rem 1.15rem;
   font-size: 0.95rem;
+  font-size: max(16px, 0.95rem); /* Prevent Safari auto-zoom on focus */
   color: #fff;
   transition: var(--transition-fast);
+  /* Remove Safari's inner shadow */
+  -webkit-appearance: none;
+  appearance: none;
+  box-shadow: none;
 }
 
 .form-input:focus {
@@ -2256,6 +2353,7 @@ footer {
 .contact-form-card textarea.form-input {
   resize: vertical;
   min-height: 110px;
+  border-radius: 12px; /* Re-assert since global input reset clears it */
 }
 
 .form-submit-btn {
@@ -2430,6 +2528,11 @@ footer {
     overflow-x: hidden;
   }
   html { font-size: 15px; }
+  /* Fix Safari address bar causing 100vh to be too tall */
+  .hero {
+    min-height: 100dvh;
+    min-height: 100vh; /* fallback */
+  }
   header .nav-container {
     padding: 0.5rem 1rem;
     gap: 0.75rem;
@@ -2456,14 +2559,23 @@ footer {
     right: 0;
     width: 75%;
     max-width: 280px;
-    height: 100vh;
-    background: #040508;
+    /* dvh = dynamic viewport height (accounts for Safari address bar) */
+    height: 100dvh;
+    height: 100vh; /* fallback for older browsers */
+    background: rgba(4, 5, 8, 0.98);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     border-left: 1px solid rgba(255, 255, 255, 0.08);
     flex-direction: column;
     padding: 6.5rem 2.25rem 2.5rem 2.25rem;
+    /* Safe area for iPhone X+ home indicator */
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
     gap: 1.75rem;
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Prevent scroll bleed */
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
   
   .nav-links.active {
@@ -2617,7 +2729,9 @@ footer {
 .process-hero h1 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .process-hero p {
@@ -2779,7 +2893,9 @@ footer {
 .portfolio-page-hero h1 span {
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .portfolio-page-hero p {
@@ -2829,7 +2945,8 @@ footer {
   position: absolute;
   top: 1rem;
   left: 1rem;
-  background: rgba(4, 5, 9, 0.75);
+  /* Solid fallback */
+  background: rgba(4, 5, 9, 0.92);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -2837,6 +2954,12 @@ footer {
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 5;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .portfolio-cat-badge {
+    background: rgba(4, 5, 9, 0.75);
+  }
 }
 
 .portfolio-extended-body {
@@ -2891,7 +3014,9 @@ footer {
   font-weight: 800;
   background: var(--gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .port-result-label {

@@ -73,6 +73,15 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   };
 }
 
+// Viewport configuration — required for proper mobile rendering
+// viewport-fit=cover ensures content fills iPhone notch/Dynamic Island areas
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5, // Allow user zoom (accessibility)
+  viewportFit: 'cover', // iOS safe-area support
+};
+
 const outfit = Outfit({ 
   subsets: ['latin'],
   variable: '--font-title',
