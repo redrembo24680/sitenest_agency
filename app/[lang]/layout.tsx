@@ -122,7 +122,7 @@ export default async function RootLayout({ children, params }: { children: React
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-5K8Z6R3';
 
   return (
-    <html lang={lang} className={`${outfit.variable} ${plusJakartaSans.variable}`}>
+    <html lang={lang} className={`${outfit.variable} ${plusJakartaSans.variable}`} suppressHydrationWarning>
       <body>
         <noscript>
           <iframe

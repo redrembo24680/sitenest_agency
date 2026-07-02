@@ -1,6 +1,64 @@
 const fs = require('fs');
 const path = require('path');
 
+
+// Robust helper to parse YAML frontmatter (handles block scalars like >-)
+function parseFrontmatter(raw) {
+  const lines = raw.split('\n');
+  const data = {};
+  let currentKey = null;
+  let blockValue = [];
+  let inBlock = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    if (inBlock) {
+      const match = line.match(/^(\s+)(.*)/);
+      if (match) {
+        blockValue.push(match[2]);
+        continue;
+      } else if (line.trim() === '') {
+        blockValue.push('');
+        continue;
+      } else {
+        data[currentKey] = blockValue.map(l => l.trim()).join(' ');
+        inBlock = false;
+        currentKey = null;
+        blockValue = [];
+      }
+    }
+
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) {
+      continue;
+    }
+
+    const key = line.slice(0, colonIdx).trim();
+    let val = line.slice(colonIdx + 1).trim();
+
+    if (val.startsWith('>') || val.startsWith('|')) {
+      inBlock = true;
+      currentKey = key;
+      blockValue = [];
+    } else {
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      }
+      data[key] = val;
+    }
+  }
+
+  if (inBlock && currentKey) {
+    data[currentKey] = blockValue.map(l => l.trim()).join(' ');
+  }
+
+  return data;
+}
+
 // Free Google Translate API call helper
 async function callTranslateApi(text, fromLang = 'uk', toLang = 'en') {
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fromLang}&tl=${toLang}&dt=t&q=${encodeURIComponent(text)}`;
@@ -105,40 +163,8 @@ async function run() {
     const frontmatterRaw = parts[1];
     const bodyContent = parts.slice(2).join('---');
 
-    // Parse frontmatter lines using a simple multi-line aware parser
-    const fmLines = frontmatterRaw.split('\n');
-    const fmData = {};
-    let currentKey = null;
-    let currentValue = [];
-
-    for (const line of fmLines) {
-      const match = line.match(/^([a-zA-Z0-9_-]+):\s*(.*)/);
-      if (match) {
-        if (currentKey) {
-          fmData[currentKey] = currentValue.join('\n').trim();
-        }
-        currentKey = match[1];
-        const rest = match[2].trim();
-        if (rest === '>-' || rest === '|') {
-          currentValue = [];
-        } else {
-          currentValue = [rest];
-        }
-      } else if (currentKey && line.startsWith('  ')) {
-        currentValue.push(line.slice(2));
-      }
-    }
-    if (currentKey) {
-      fmData[currentKey] = currentValue.join('\n').trim();
-    }
-
-    // Strip outer quotes if any
-    for (const key in fmData) {
-      let val = fmData[key];
-      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-        fmData[key] = val.slice(1, -1);
-      }
-    }
+    // Parse frontmatter
+    const fmData = parseFrontmatter(frontmatterRaw);
 
     // Translate fields
     console.log(`- Translating title: "${fmData.title}"`);
