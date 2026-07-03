@@ -29,29 +29,43 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const canonicalUrlEn = `${url}/en${cleanPath === '/' ? '' : cleanPath}`;
   const currentCanonical = lang === 'en' ? canonicalUrlEn : canonicalUrlUk;
   
+  const isEn = lang === 'en';
+
+  const defaultTitle = isEn
+    ? 'SiteNest Agency | Web Development in Lviv, Ukraine'
+    : 'SiteNest Agency | Розробка веб-сайтів у Львові';
+
+  const defaultDescription = isEn
+    ? 'SiteNest Agency — a web agency from Lviv. We build fast, responsive websites: Front-end, Back-end, DevOps and SMM marketing.'
+    : 'SiteNest Agency — веб-агенція з Львова. Розробляємо швидкі, адаптивні сайти: Front-end, Back-end, DevOps та SMM просування.';
+
+  const defaultKeywords = isEn
+    ? ['web agency', 'website development', 'Lviv', 'Next.js', 'React', 'DevOps', 'SEO', 'Ukraine']
+    : ['веб-агенція', 'розробка сайтів', 'Львів', 'Next.js', 'React', 'DevOps', 'SEO'];
+
   return {
     metadataBase: new URL(url),
     title: {
-      default: 'SiteNest Agency | Розробка веб-сайтів у Львові',
+      default: defaultTitle,
       template: '%s | SiteNest Agency',
     },
-    description: 'SiteNest Agency — веб-агенція з Львова. Розробляємо швидкі, адаптивні сайти: Front-end, Back-end, DevOps та SMM просування.',
-    keywords: ['веб-агенція', 'розробка сайтів', 'Львів', 'Next.js', 'React', 'DevOps', 'SEO'],
+    description: defaultDescription,
+    keywords: defaultKeywords,
     authors: [{ name: 'SiteNest Agency', url }],
     creator: 'SiteNest Agency',
     openGraph: {
       type: 'website',
-      locale: lang === 'uk' ? 'uk_UA' : 'en_US',
+      locale: isEn ? 'en_US' : 'uk_UA',
       url: currentCanonical,
       siteName: 'SiteNest Agency',
-      title: 'SiteNest Agency | Розробка веб-сайтів у Львові',
-      description: 'SiteNest Agency — веб-агенція з Львова. Front-end, Back-end, DevOps та SMM.',
+      title: defaultTitle,
+      description: defaultDescription,
       images: [{ url: '/og-image.webp', width: 1200, height: 630, alt: 'SiteNest Agency' }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'SiteNest Agency | Розробка веб-сайтів',
-      description: 'SiteNest Agency — веб-агенція з Львова.',
+      title: isEn ? 'SiteNest Agency | Web Development' : 'SiteNest Agency | Розробка веб-сайтів',
+      description: isEn ? 'SiteNest Agency — a web agency from Lviv, Ukraine.' : 'SiteNest Agency — веб-агенція з Львова.',
       images: ['/og-image.webp'],
     },
     alternates: {
@@ -97,17 +111,25 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export default async function RootLayout({ children, params }: { children: React.ReactNode, params: Promise<{ lang: string }> }) {
   const resolvedParams = await params;
   const lang = resolvedParams.lang || 'uk';
+  const isEn = lang === 'en';
+
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
-    'name': 'SiteNest Agency',
-    'image': 'https://sitenest.work/og-image.webp',
+    '@type': ['LocalBusiness', 'ProfessionalService'],
     '@id': 'https://sitenest.work/#organization',
+    'name': 'SiteNest Agency',
+    'alternateName': isEn ? 'SiteNest Web Development Agency Lviv' : 'SiteNest веб-агенція Львів',
+    'description': isEn
+      ? 'Full-cycle web development agency in Lviv, Ukraine. We build fast, modern websites: React/Next.js front-end, Node.js back-end, Docker DevOps and SMM promotion.'
+      : 'Веб-агенція повного циклу у Львові. Розробляємо швидкі, адаптивні сайти: React/Next.js front-end, Node.js back-end, DevOps та SMM-просування.',
+    'image': 'https://sitenest.work/og-image.webp',
+    'logo': 'https://sitenest.work/icon-192x192.png?v=11',
     'url': 'https://sitenest.work',
+    'email': 'sitenest.ua@gmail.com',
     'address': {
       '@type': 'PostalAddress',
-      'addressLocality': 'Львів',
-      'addressRegion': 'Львівська область',
+      'addressLocality': isEn ? 'Lviv' : 'Львів',
+      'addressRegion': isEn ? 'Lviv Oblast' : 'Львівська область',
       'addressCountry': 'UA',
     },
     'geo': {
@@ -115,10 +137,74 @@ export default async function RootLayout({ children, params }: { children: React
       'latitude': 49.8397,
       'longitude': 24.0297,
     },
+    'areaServed': [
+      { '@type': 'City', 'name': isEn ? 'Lviv' : 'Львів' },
+      { '@type': 'Country', 'name': isEn ? 'Ukraine' : 'Україна' },
+    ],
+    'priceRange': '$$',
+    'currenciesAccepted': 'UAH, USD, EUR',
+    'paymentAccepted': isEn ? 'Bank transfer, Card' : 'Банківський переказ, Картка',
+    'openingHoursSpecification': [
+      {
+        '@type': 'OpeningHoursSpecification',
+        'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        'opens': '09:00',
+        'closes': '18:00',
+      },
+    ],
+    'hasOfferCatalog': {
+      '@type': 'OfferCatalog',
+      'name': isEn ? 'Web Development Services' : 'Послуги веб-розробки',
+      'itemListElement': [
+        {
+          '@type': 'Offer',
+          'itemOffered': {
+            '@type': 'Service',
+            'name': isEn ? 'Front-end Development (React/Next.js)' : 'Front-end розробка (React/Next.js)',
+            'description': isEn
+              ? 'Interactive, responsive interfaces with React and Next.js, smooth 60fps animations.'
+              : 'Інтерактивні адаптивні інтерфейси на React та Next.js з плавними анімаціями 60fps.',
+            'url': 'https://sitenest.work/services/frontend',
+          },
+        },
+        {
+          '@type': 'Offer',
+          'itemOffered': {
+            '@type': 'Service',
+            'name': isEn ? 'Back-end Development (Node.js, Python)' : 'Back-end розробка (Node.js, Python)',
+            'description': isEn
+              ? 'Scalable REST APIs, database design, payment integrations.'
+              : 'Масштабовані REST API, проектування БД, інтеграція платіжних систем.',
+            'url': 'https://sitenest.work/services/backend',
+          },
+        },
+        {
+          '@type': 'Offer',
+          'itemOffered': {
+            '@type': 'Service',
+            'name': isEn ? 'DevOps & Cloud Infrastructure (Docker, AWS)' : 'DevOps і хмарна інфраструктура (Docker, AWS)',
+            'description': isEn
+              ? 'Cloud deployment, CI/CD automation, Nginx, Cloudflare CDN and security.'
+              : 'Хмарний деплой, CI/CD автоматизація, Nginx, Cloudflare CDN та захист.',
+            'url': 'https://sitenest.work/services/devops',
+          },
+        },
+        {
+          '@type': 'Offer',
+          'itemOffered': {
+            '@type': 'Service',
+            'name': isEn ? 'SMM & SEO Marketing' : 'SMM та SEO просування',
+            'description': isEn
+              ? 'Brand promotion on social networks, Meta Ads targeting, SEO content optimization.'
+              : 'Просування бренду в соцмережах, таргетована реклама Meta Ads, SEO-оптимізація.',
+            'url': 'https://sitenest.work/services/smm',
+          },
+        },
+      ],
+    },
     'sameAs': [
       'https://www.instagram.com/sitenest_agency',
     ],
-    'priceRange': '$$',
   };
 
   const websiteJsonLd = {
@@ -126,6 +212,14 @@ export default async function RootLayout({ children, params }: { children: React
     '@type': 'WebSite',
     'name': 'SiteNest Agency',
     'url': 'https://sitenest.work',
+    'potentialAction': {
+      '@type': 'SearchAction',
+      'target': {
+        '@type': 'EntryPoint',
+        'urlTemplate': 'https://sitenest.work/blog?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
   };
 
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-5K8Z6R3';
