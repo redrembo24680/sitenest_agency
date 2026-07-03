@@ -1,8 +1,33 @@
+import type { Metadata } from 'next';
 import { getBlogPosts } from '@/lib/blog';
 import BlogClient, { SerializedBlogPost } from './BlogClient';
 
 interface BlogPageProps {
   params: Promise<{ lang: 'uk' | 'en' }>;
+}
+
+export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
+  const { lang } = await params;
+
+  if (lang === 'en') {
+    return {
+      title: 'Blog | Web Development Insights & Tips — SiteNest Agency',
+      description: 'Read SiteNest Agency\'s blog for expert articles on web development, Next.js, DevOps, SEO, and digital marketing strategies.',
+      openGraph: {
+        title: 'Blog | Web Development Insights & Tips — SiteNest Agency',
+        description: 'Expert articles on web development, Next.js, DevOps, SEO and digital marketing from the SiteNest team.',
+      },
+    };
+  }
+
+  return {
+    title: 'Блог | Статті про веб-розробку та digital — SiteNest Agency',
+    description: 'Читайте блог SiteNest Agency: експертні статті з веб-розробки, Next.js, DevOps, SEO та стратегій digital-маркетингу.',
+    openGraph: {
+      title: 'Блог | Статті про веб-розробку та digital — SiteNest Agency',
+      description: 'Експертні матеріали з веб-розробки, Next.js, DevOps, SEO та digital-маркетингу від команди SiteNest.',
+    },
+  };
 }
 
 export async function generateStaticParams() {

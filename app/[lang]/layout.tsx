@@ -29,29 +29,43 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const canonicalUrlEn = `${url}/en${cleanPath === '/' ? '' : cleanPath}`;
   const currentCanonical = lang === 'en' ? canonicalUrlEn : canonicalUrlUk;
   
+  const isEn = lang === 'en';
+
+  const defaultTitle = isEn
+    ? 'SiteNest Agency | Web Development in Lviv, Ukraine'
+    : 'SiteNest Agency | Розробка веб-сайтів у Львові';
+
+  const defaultDescription = isEn
+    ? 'SiteNest Agency — a web agency from Lviv. We build fast, responsive websites: Front-end, Back-end, DevOps and SMM marketing.'
+    : 'SiteNest Agency — веб-агенція з Львова. Розробляємо швидкі, адаптивні сайти: Front-end, Back-end, DevOps та SMM просування.';
+
+  const defaultKeywords = isEn
+    ? ['web agency', 'website development', 'Lviv', 'Next.js', 'React', 'DevOps', 'SEO', 'Ukraine']
+    : ['веб-агенція', 'розробка сайтів', 'Львів', 'Next.js', 'React', 'DevOps', 'SEO'];
+
   return {
     metadataBase: new URL(url),
     title: {
-      default: 'SiteNest Agency | Розробка веб-сайтів у Львові',
+      default: defaultTitle,
       template: '%s | SiteNest Agency',
     },
-    description: 'SiteNest Agency — веб-агенція з Львова. Розробляємо швидкі, адаптивні сайти: Front-end, Back-end, DevOps та SMM просування.',
-    keywords: ['веб-агенція', 'розробка сайтів', 'Львів', 'Next.js', 'React', 'DevOps', 'SEO'],
+    description: defaultDescription,
+    keywords: defaultKeywords,
     authors: [{ name: 'SiteNest Agency', url }],
     creator: 'SiteNest Agency',
     openGraph: {
       type: 'website',
-      locale: lang === 'uk' ? 'uk_UA' : 'en_US',
+      locale: isEn ? 'en_US' : 'uk_UA',
       url: currentCanonical,
       siteName: 'SiteNest Agency',
-      title: 'SiteNest Agency | Розробка веб-сайтів у Львові',
-      description: 'SiteNest Agency — веб-агенція з Львова. Front-end, Back-end, DevOps та SMM.',
+      title: defaultTitle,
+      description: defaultDescription,
       images: [{ url: '/og-image.webp', width: 1200, height: 630, alt: 'SiteNest Agency' }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'SiteNest Agency | Розробка веб-сайтів',
-      description: 'SiteNest Agency — веб-агенція з Львова.',
+      title: isEn ? 'SiteNest Agency | Web Development' : 'SiteNest Agency | Розробка веб-сайтів',
+      description: isEn ? 'SiteNest Agency — a web agency from Lviv, Ukraine.' : 'SiteNest Agency — веб-агенція з Львова.',
       images: ['/og-image.webp'],
     },
     alternates: {
