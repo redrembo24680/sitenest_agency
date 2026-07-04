@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { useRouter } from 'next/navigation';
 import { 
   MessageSquare, 
   X, 
@@ -38,6 +39,7 @@ const WIDGET_TRANSLATIONS = {
     backToLinks: 'Назад до контактів',
     typing: 'AI думає...',
     welcomeMessage: 'Привіт! Я AI-асистент SiteNest. Я знаю все про наші послуги, ціни та команду. Яку задачу ви хочете вирішити або який сайт плануєте розробити?',
+    goToPage: 'Перейти на сторінку',
   },
   en: {
     helpButton: 'Need help? Leave a message',
@@ -51,16 +53,19 @@ const WIDGET_TRANSLATIONS = {
     backToLinks: 'Back to Contacts',
     typing: 'AI is thinking...',
     welcomeMessage: 'Hello! I am the SiteNest AI assistant. I know everything about our prices, services, and team. What kind of project or website are you planning to build?',
+    goToPage: 'Go to page',
   }
 };
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  action?: { type: 'redirect'; path: string };
 }
 
 export default function FloatingChatWidget() {
   const { lang } = useLanguage();
+  const router = useRouter();
   const t = WIDGET_TRANSLATIONS[lang as 'uk' | 'en'] || WIDGET_TRANSLATIONS.uk;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -153,12 +158,27 @@ export default function FloatingChatWidget() {
       }
 
       const data = await response.json();
+      let replyText = data.content || 'Error generating response.';
+      
+      const redirectMatch = replyText.match(/\[REDIRECT:([^\]]+)\]/);
+      let actionObj: Message['action'] = undefined;
+      if (redirectMatch) {
+        let path = redirectMatch[1].trim();
+        if (!path.startsWith('/')) {
+          path = '/' + path;
+        }
+        replyText = replyText.replace(redirectMatch[0], '').trim();
+        if (path) {
+          actionObj = { type: 'redirect', path };
+        }
+      }
       
       setMessages(prev => [
         ...prev, 
         { 
           role: 'assistant', 
-          content: data.content || 'Error generating response.' 
+          content: replyText,
+          action: actionObj
         }
       ]);
     } catch (error) {
@@ -203,6 +223,17 @@ export default function FloatingChatWidget() {
           {messages.map((msg, index) => (
             <div key={index} className={`chat-message-bubble ${msg.role}`}>
               <p>{msg.content}</p>
+              {msg.action?.type === 'redirect' && (
+                <button 
+                  className="chat-action-btn"
+                  onClick={() => {
+                    router.push(`/${lang}${msg.action!.path}`);
+                    toggleWidget();
+                  }}
+                >
+                  {t.goToPage} →
+                </button>
+              )}
             </div>
           ))}
           {isTyping && (

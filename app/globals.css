@@ -3535,6 +3535,28 @@ a:focus-visible {
   overflow-wrap: anywhere;
 }
 
+.chat-action-btn {
+  margin-top: 10px;
+  background: var(--gradient-neon);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 10px rgba(255, 0, 127, 0.2);
+}
+
+.chat-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 0, 127, 0.4);
+}
+
+
 /* Typing Indicator */
 .typing-dots {
   display: flex;
