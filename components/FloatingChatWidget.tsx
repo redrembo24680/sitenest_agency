@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useRouter } from 'next/navigation';
+import confetti from 'canvas-confetti';
 import { 
   MessageSquare, 
   X, 
@@ -21,9 +22,31 @@ const InstagramIcon = () => (
   </svg>
 );
 
+const TelegramIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="22" y1="2" x2="11" y2="13"></line>
+    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+  </svg>
+);
+
+const ViberIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+  </svg>
+);
+
+const WhatsAppIcon = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+  </svg>
+);
+
 const CONTACT_LINKS = {
   instagram: 'https://www.instagram.com/sitenest_agency',
-  email: 'https://mail.google.com/mail/?view=cm&fs=1&to=sitenest.ua@gmail.com'
+  email: 'https://mail.google.com/mail/?view=cm&fs=1&to=sitenest.ua@gmail.com',
+  telegram: 'https://t.me/sitenest_agency',
+  viber: 'viber://chat?number=+380000000000',
+  whatsapp: 'https://wa.me/380000000000'
 };
 
 const WIDGET_TRANSLATIONS = {
@@ -61,7 +84,91 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   action?: { type: 'redirect'; path: string };
+  widget?: 'messengers' | 'calculator';
 }
+
+const ChatCalculator = ({ lang }: { lang: 'uk' | 'en' }) => {
+  const [type, setType] = useState<'landing' | 'corporate' | 'ecommerce'>('landing');
+  const [pages, setPages] = useState(1);
+  const [devops, setDevops] = useState(false);
+  const [seo, setSeo] = useState(false);
+
+  const basePrice = { landing: 150, corporate: 250, ecommerce: 400 }[type];
+  const pagesPrice = Math.max(0, pages - 1) * 5;
+  const devopsPrice = devops ? 50 : 0;
+  const seoPrice = seo ? 100 : 0;
+  const total = basePrice + pagesPrice + devopsPrice + seoPrice;
+
+  const labels = {
+    uk: {
+      type: 'Тип сайту:',
+      landing: 'Лендінг',
+      corporate: 'Корпоративний',
+      ecommerce: 'Магазин',
+      pages: 'Кількість сторінок: ',
+      devops: 'DevOps / CDN (+$50)',
+      seo: 'SEO / SMM (+$100)',
+      total: 'Орієнтовна вартість:'
+    },
+    en: {
+      type: 'Project Type:',
+      landing: 'Landing',
+      corporate: 'Corporate',
+      ecommerce: 'E-commerce',
+      pages: 'Number of pages: ',
+      devops: 'DevOps / CDN (+$50)',
+      seo: 'SEO / SMM (+$100)',
+      total: 'Estimated Price:'
+    }
+  }[lang];
+
+  return (
+    <div style={{ marginTop: '15px', background: 'var(--bg-dark)', padding: '15px', borderRadius: '12px', border: '1px solid var(--border-glow)', fontSize: '13px' }}>
+      <div style={{ marginBottom: '10px' }}>
+        <label style={{ display: 'block', color: 'var(--text-dim)', marginBottom: '5px' }}>{labels.type}</label>
+        <select 
+          value={type} 
+          onChange={e => setType(e.target.value as any)}
+          style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'var(--bg-darker)', color: 'white', border: '1px solid var(--border-glow)' }}
+        >
+          <option value="landing">{labels.landing} ($150)</option>
+          <option value="corporate">{labels.corporate} ($250)</option>
+          <option value="ecommerce">{labels.ecommerce} ($400)</option>
+        </select>
+      </div>
+      
+      <div style={{ marginBottom: '10px' }}>
+        <label style={{ display: 'block', color: 'var(--text-dim)', marginBottom: '5px' }}>
+          {labels.pages} <span style={{ color: 'var(--color-blue)' }}>{pages}</span>
+        </label>
+        <input 
+          type="range" 
+          min="1" 
+          max="30" 
+          value={pages} 
+          onChange={e => setPages(parseInt(e.target.value))}
+          style={{ width: '100%', accentColor: 'var(--color-blue)' }}
+        />
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '15px' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+          <input type="checkbox" checked={devops} onChange={e => setDevops(e.target.checked)} style={{ accentColor: 'var(--color-pink)' }} />
+          {labels.devops}
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+          <input type="checkbox" checked={seo} onChange={e => setSeo(e.target.checked)} style={{ accentColor: 'var(--color-pink)' }} />
+          {labels.seo}
+        </label>
+      </div>
+
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ color: 'var(--text-slate)' }}>{labels.total}</span>
+        <strong style={{ fontSize: '18px', color: 'var(--color-orange)' }}>${total}</strong>
+      </div>
+    </div>
+  );
+};
 
 export default function FloatingChatWidget() {
   const { lang } = useLanguage();
@@ -172,13 +279,51 @@ export default function FloatingChatWidget() {
           actionObj = { type: 'redirect', path };
         }
       }
+
+      // 2. Special WOW Actions
+      if (replyText.includes('[ACTION:CONFETTI]')) {
+        replyText = replyText.replace(/\[ACTION:CONFETTI\]/g, '').trim();
+        try {
+          confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        } catch(e) {}
+      }
+
+      if (replyText.includes('[ACTION:LANG_EN]')) {
+        replyText = replyText.replace(/\[ACTION:LANG_EN\]/g, '').trim();
+        if (lang === 'uk') {
+          setTimeout(() => router.push(window.location.pathname.replace('/uk', '/en')), 2000);
+        }
+      }
+      if (replyText.includes('[ACTION:LANG_UK]')) {
+        replyText = replyText.replace(/\[ACTION:LANG_UK\]/g, '').trim();
+        if (lang === 'en') {
+          setTimeout(() => router.push(window.location.pathname.replace('/en', '/uk')), 2000);
+        }
+      }
       
+      let widgetObj: Message['widget'] = undefined;
+      const messengersRegex = /\[(W|В)IDGET:MESSENGERS\]/gi;
+      if (replyText.match(messengersRegex)) {
+        replyText = replyText.replace(messengersRegex, '').trim();
+        widgetObj = 'messengers';
+      }
+      const calculatorRegex = /\[(W|В)IDGET:CALCULATOR\]/gi;
+      if (replyText.match(calculatorRegex)) {
+        replyText = replyText.replace(calculatorRegex, '').trim();
+        widgetObj = 'calculator';
+      }
+
       setMessages(prev => [
         ...prev, 
         { 
           role: 'assistant', 
           content: replyText,
-          action: actionObj
+          action: actionObj,
+          widget: widgetObj
         }
       ]);
     } catch (error) {
@@ -233,6 +378,22 @@ export default function FloatingChatWidget() {
                 >
                   {t.goToPage} →
                 </button>
+              )}
+              {msg.widget === 'messengers' && (
+                <div style={{ display: 'flex', gap: '10px', marginTop: '12px', justifyContent: 'center' }}>
+                  <a href={CONTACT_LINKS.telegram} target="_blank" rel="noopener noreferrer" style={{ background: '#0088cc', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', width: '40px', height: '40px', boxShadow: '0 4px 10px rgba(0, 136, 204, 0.3)' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                    <TelegramIcon />
+                  </a>
+                  <a href={CONTACT_LINKS.viber} target="_blank" rel="noopener noreferrer" style={{ background: '#7360f2', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', width: '40px', height: '40px', boxShadow: '0 4px 10px rgba(115, 96, 242, 0.3)' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                    <ViberIcon />
+                  </a>
+                  <a href={CONTACT_LINKS.whatsapp} target="_blank" rel="noopener noreferrer" style={{ background: '#25D366', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s', width: '40px', height: '40px', boxShadow: '0 4px 10px rgba(37, 211, 102, 0.3)' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                    <WhatsAppIcon />
+                  </a>
+                </div>
+              )}
+              {msg.widget === 'calculator' && (
+                <ChatCalculator lang={lang as 'uk' | 'en'} />
               )}
             </div>
           ))}
