@@ -3502,11 +3502,13 @@ a:focus-visible {
 }
 
 .chat-message-bubble {
-  max-width: 80%;
+  max-width: 85%;
   padding: 0.85rem 1.1rem;
   border-radius: 18px;
   font-size: 0.85rem;
   line-height: 1.45;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .chat-message-bubble.user {
@@ -3529,7 +3531,7 @@ a:focus-visible {
   margin: 0;
   white-space: pre-line;
   word-wrap: break-word;
-  word-break: break-word;
+  word-break: break-all; /* Fallback for aggressive long strings like asddddddd */
   overflow-wrap: anywhere;
 }
 
@@ -3587,14 +3589,12 @@ a:focus-visible {
   word-wrap: break-word;
   word-break: break-word;
   overflow-wrap: anywhere;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .chat-input-field::-webkit-scrollbar {
-  width: 4px;
-}
-.chat-input-field::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .chat-input-field:focus {
