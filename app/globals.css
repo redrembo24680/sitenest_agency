@@ -3528,6 +3528,9 @@ a:focus-visible {
 .chat-message-bubble p {
   margin: 0;
   white-space: pre-line;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* Typing Indicator */
@@ -3569,12 +3572,29 @@ a:focus-visible {
   flex-grow: 1;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 50px;
+  border-radius: 20px;
   padding: 0.75rem 1.25rem;
   font-size: 0.85rem;
+  font-family: inherit;
   color: #fff;
   outline: none;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+  resize: none;
+  min-height: 44px;
+  max-height: 120px;
+  line-height: 1.4;
+  overflow-y: auto;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.chat-input-field::-webkit-scrollbar {
+  width: 4px;
+}
+.chat-input-field::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
 .chat-input-field:focus {

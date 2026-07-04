@@ -117,6 +117,13 @@ export default function FloatingChatWidget() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!inputValue.trim() || isTyping) return;
@@ -220,14 +227,20 @@ export default function FloatingChatWidget() {
           >
             <ArrowLeft size={18} />
           </button>
-          <input
-            ref={inputRef}
-            type="text"
+          <textarea
+            ref={inputRef as any}
             className="chat-input-field"
             placeholder={t.chatPlaceholder}
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              // Auto-expand textarea
+              e.target.style.height = 'auto';
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+            }}
+            onKeyDown={handleKeyDown}
             disabled={isTyping}
+            rows={1}
           />
           <button 
             type="submit" 
