@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import FloatingChatWidget from '@/components/FloatingChatWidget';
 import '../globals.css';
 
 import { headers } from 'next/headers';
@@ -266,6 +267,7 @@ export default async function RootLayout({ children, params }: { children: React
             {children}
           </main>
           <Footer />
+          <FloatingChatWidget />
         </LanguageProvider>
       </body>
     </html>
