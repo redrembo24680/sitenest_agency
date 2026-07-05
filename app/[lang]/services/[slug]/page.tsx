@@ -49,8 +49,8 @@ export default function ServiceDetail({ params }: ServicePageProps) {
   return (
     <div className="page-fade-enter">
       {/* HERO SECTION */}
-      <section className="services-hero">
-        <div className="container" style={{ textAlign: 'left', position: 'relative' }}>
+      <section className="services-hero service-detail-hero">
+        <div className="container">
           <Link 
             href="/services" 
             className="btn btn-outline" 
@@ -63,10 +63,10 @@ export default function ServiceDetail({ params }: ServicePageProps) {
           <span className="section-subtitle" style={{ textAlign: 'left', margin: '0 0 0.5rem 0' }}>
             {serviceId.toUpperCase()}
           </span>
-          <h1 style={{ fontSize: '3rem', lineHeight: '1.2', marginBottom: '1rem', fontWeight: 800 }}>
+          <h1>
             {serviceData.title}
           </h1>
-          <p style={{ fontSize: '1.2rem', color: 'var(--color-blue)', maxWidth: '800px', margin: 0, fontWeight: 500 }}>
+          <p className="service-tagline">
             {serviceData.tagline}
           </p>
         </div>
@@ -74,18 +74,10 @@ export default function ServiceDetail({ params }: ServicePageProps) {
 
       {/* CONTENT GRID */}
       <section className="container" style={{ paddingBottom: '6rem' }}>
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1.2fr 0.8fr', 
-            gap: '3.5rem', 
-            alignItems: 'start' 
-          }}
-          className="service-detail-grid-layout"
-        >
+        <div className="service-detail-grid-layout">
           {/* LEFT SIDE: Text and Details */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-            <div className="glass-card" style={{ padding: '2.5rem' }}>
+            <div className="glass-card">
               <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#cbd5e1', marginBottom: '1.5rem' }}>
                 {serviceData.desc1}
               </p>
@@ -94,7 +86,7 @@ export default function ServiceDetail({ params }: ServicePageProps) {
               </p>
             </div>
 
-            <div className="glass-card" style={{ padding: '2.5rem' }}>
+            <div className="glass-card">
               <h3 style={{ fontFamily: 'var(--font-title)', fontSize: '1.5rem', marginBottom: '1.5rem', color: '#fff', fontWeight: 700 }}>
                 {t.serviceDetails.keyFeaturesTitle}
               </h3>
@@ -108,7 +100,7 @@ export default function ServiceDetail({ params }: ServicePageProps) {
               </ul>
             </div>
 
-            <div className="glass-card" style={{ padding: '2.5rem' }}>
+            <div className="glass-card">
               <h3 style={{ fontFamily: 'var(--font-title)', fontSize: '1.5rem', marginBottom: '1.5rem', color: '#fff', fontWeight: 700 }}>
                 {t.serviceDetails.techStackTitle}
               </h3>
@@ -128,11 +120,11 @@ export default function ServiceDetail({ params }: ServicePageProps) {
 
           {/* RIGHT SIDE: Interactive Graphic & Call to Action */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', position: 'sticky', top: '100px' }} className="service-detail-sidebar">
-            <div className="service-detail-visual" style={{ width: '100%', height: 'auto', minHeight: '260px' }}>
+            <div className="service-detail-visual">
               {renderVisual()}
             </div>
 
-            <div className="glass-card" style={{ padding: '2.5rem', background: 'radial-gradient(circle at top right, rgba(0, 240, 255, 0.05), transparent 70%), var(--bg-card)', border: '1px solid rgba(0, 240, 255, 0.15)' }}>
+            <div className="glass-card" style={{ background: 'radial-gradient(circle at top right, rgba(0, 240, 255, 0.05), transparent 70%), var(--bg-card)', border: '1px solid rgba(0, 240, 255, 0.15)' }}>
               <h3 style={{ fontFamily: 'var(--font-title)', fontSize: '1.6rem', color: '#fff', marginBottom: '1rem', fontWeight: 800 }}>
                 {t.serviceDetails.ctaTitle}
               </h3>

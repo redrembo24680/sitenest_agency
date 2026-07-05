@@ -34,6 +34,7 @@ export function Header() {
     { key: 'portfolio', label: t.nav.portfolio, href: '/portfolio' },
     { key: 'team', label: t.nav.team, href: '/team' },
     { key: 'blog', label: t.nav.blog, href: '/blog' },
+    { key: 'web3', label: t.nav.web3, href: '/web3' },
     { key: 'contact', label: t.nav.contact, href: '/contact' },
   ];
 

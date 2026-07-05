@@ -84,8 +84,21 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   action?: { type: 'redirect'; path: string };
-  widget?: 'messengers' | 'calculator';
+  widget?: 'messengers' | 'calculator' | 'quick_form';
 }
+
+const QUICK_REPLIES = {
+  uk: [
+    { label: "Яка ціна? 💰", query: "Яка ціна?" },
+    { label: "Показати портфоліо 🎨", query: "Показати портфоліо" },
+    { label: "Зв'язатися з вами 📞", query: "Зв'язатися з вами" }
+  ],
+  en: [
+    { label: "What's the price? 💰", query: "What's the price?" },
+    { label: "Show portfolio 🎨", query: "Show portfolio" },
+    { label: "Contact you 📞", query: "Contact you" }
+  ]
+};
 
 const ChatCalculator = ({ lang }: { lang: 'uk' | 'en' }) => {
   const [type, setType] = useState<'landing' | 'corporate' | 'ecommerce'>('landing');
@@ -170,6 +183,129 @@ const ChatCalculator = ({ lang }: { lang: 'uk' | 'en' }) => {
   );
 };
 
+const ChatQuickForm = ({ lang }: { lang: 'uk' | 'en' }) => {
+  const [contact, setContact] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const translations = {
+    uk: {
+      placeholder: 'Email або телефон...',
+      submit: 'Надіслати',
+      success: 'Дякуємо! Контакти збережено. Наш менеджер зв\'яжеться з вами найближчим часом. ✨',
+      error: 'Помилка надсилання. Спробуйте ще раз.',
+      invalid: 'Введіть коректний Email або номер телефону.'
+    },
+    en: {
+      placeholder: 'Email or phone...',
+      submit: 'Submit',
+      success: 'Thank you! Contacts saved. Our manager will contact you soon. ✨',
+      error: 'Sending failed. Please try again.',
+      invalid: 'Please enter a valid email or phone number.'
+    }
+  }[lang] || {
+    placeholder: 'Email or phone...',
+    submit: 'Submit',
+    success: 'Thank you! Contacts saved. Our manager will contact you soon. ✨',
+    error: 'Sending failed. Please try again.',
+    invalid: 'Please enter a valid email or phone number.'
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contact.trim() || contact.trim().length < 6) {
+      setError(translations.invalid);
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const { sendQuickLead } = await import('@/app/actions/contact');
+      const res = await sendQuickLead(contact);
+      if (res.success) {
+        setSubmitted(true);
+        try {
+          confetti({
+            particleCount: 50,
+            spread: 50,
+            origin: { y: 0.8 }
+          });
+        } catch(e) {}
+      } else {
+        setError(translations.error);
+      }
+    } catch (err) {
+      setError(translations.error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div style={{ marginTop: '12px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '12px 15px', borderRadius: '12px', color: '#10b981', fontSize: '13px', lineHeight: '1.5' }}>
+        {translations.success}
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <input 
+          type="text" 
+          placeholder={translations.placeholder} 
+          value={contact}
+          onChange={e => {
+            setContact(e.target.value);
+            setError('');
+          }}
+          disabled={loading}
+          style={{
+            flex: 1,
+            padding: '10px 14px',
+            borderRadius: '10px',
+            background: 'var(--bg-darker)',
+            color: 'white',
+            border: error ? '1px solid var(--color-pink)' : '1px solid var(--border-glow)',
+            fontSize: '13px',
+            outline: 'none',
+            transition: 'border-color 0.2s'
+          }}
+        />
+        <button 
+          type="submit" 
+          disabled={loading}
+          style={{
+            padding: '10px 16px',
+            borderRadius: '10px',
+            background: 'var(--gradient-neon)',
+            color: 'white',
+            border: 'none',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px'
+          }}
+        >
+          {loading ? <Loader2 size={14} className="animate-spin" /> : translations.submit}
+        </button>
+      </div>
+      {error && (
+        <span style={{ fontSize: '11px', color: 'var(--color-pink)', paddingLeft: '4px' }}>
+          {error}
+        </span>
+      )}
+    </form>
+  );
+};
+
 export default function FloatingChatWidget() {
   const { lang } = useLanguage();
   const router = useRouter();
@@ -181,19 +317,73 @@ export default function FloatingChatWidget() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showNotificationBadge, setShowNotificationBadge] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize welcome message when chat becomes active or language changes
+  // Initialize and load chat state from LocalStorage on mount (client-only)
   useEffect(() => {
-    setMessages([
-      {
-        role: 'assistant',
-        content: t.welcomeMessage
+    setIsMounted(true);
+    
+    // Load messages
+    const savedMessages = localStorage.getItem('sitenest_chat_messages');
+    if (savedMessages) {
+      try {
+        setMessages(JSON.parse(savedMessages));
+      } catch (e) {
+        console.error('Error loading chat history:', e);
       }
-    ]);
-  }, [lang, t.welcomeMessage]);
+    } else {
+      setMessages([
+        {
+          role: 'assistant',
+          content: t.welcomeMessage
+        }
+      ]);
+    }
+
+    // Load open/active states
+    const savedIsOpen = localStorage.getItem('sitenest_chat_is_open');
+    if (savedIsOpen === 'true') {
+      setIsOpen(true);
+    }
+    const savedIsChatActive = localStorage.getItem('sitenest_chat_is_active');
+    if (savedIsChatActive === 'true') {
+      setIsChatActive(true);
+    }
+  }, []);
+
+  // Save messages to LocalStorage
+  useEffect(() => {
+    if (!isMounted) return;
+    localStorage.setItem('sitenest_chat_messages', JSON.stringify(messages));
+  }, [messages, isMounted]);
+
+  // Save isOpen state to LocalStorage
+  useEffect(() => {
+    if (!isMounted) return;
+    localStorage.setItem('sitenest_chat_is_open', isOpen ? 'true' : 'false');
+  }, [isOpen, isMounted]);
+
+  // Save isChatActive state to LocalStorage
+  useEffect(() => {
+    if (!isMounted) return;
+    localStorage.setItem('sitenest_chat_is_active', isChatActive ? 'true' : 'false');
+  }, [isChatActive, isMounted]);
+
+  // Dynamically update welcome message translation ONLY if it's the only message in chat
+  useEffect(() => {
+    if (!isMounted) return;
+    if (messages.length === 1 && messages[0].role === 'assistant') {
+      setMessages([
+        {
+          role: 'assistant',
+          content: t.welcomeMessage
+        }
+      ]);
+    }
+  }, [lang, t.welcomeMessage, isMounted]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
@@ -236,15 +426,54 @@ export default function FloatingChatWidget() {
     }
   };
 
-  const handleSendMessage = async (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent, customText?: string) => {
     if (e) e.preventDefault();
-    if (!inputValue.trim() || isTyping) return;
+    const textToSend = (customText || inputValue).trim();
+    if (!textToSend || isTyping) return;
 
-    const userMessageText = inputValue.trim();
     setInputValue('');
 
+    // Developer test backdoors
+    const cleanText = textToSend.toLowerCase().trim();
+    if (cleanText === '/quickform' || cleanText === '[widget:quick_form]') {
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', content: textToSend } as Message,
+        {
+          role: 'assistant',
+          content: lang === 'uk' ? 'Будь ласка, заповніть форму нижче для швидкого зв\'язку:' : 'Please fill out the form below to get in touch:',
+          widget: 'quick_form'
+        } as Message
+      ]);
+      return;
+    }
+    if (cleanText === '/calculator' || cleanText === '[widget:calculator]') {
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', content: textToSend } as Message,
+        {
+          role: 'assistant',
+          content: lang === 'uk' ? 'Ось наш інтерактивний калькулятор вартості:' : 'Here is our interactive price calculator:',
+          widget: 'calculator'
+        } as Message
+      ]);
+      return;
+    }
+    if (cleanText === '/messengers' || cleanText === '[widget:messengers]') {
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', content: textToSend } as Message,
+        {
+          role: 'assistant',
+          content: lang === 'uk' ? 'Ви можете написати нам у будь-який месенджер:' : 'You can write to us in any messenger:',
+          widget: 'messengers'
+        } as Message
+      ]);
+      return;
+    }
+
     // Append user message
-    const updatedMessages = [...messages, { role: 'user', content: userMessageText } as Message];
+    const updatedMessages = [...messages, { role: 'user', content: textToSend } as Message];
     setMessages(updatedMessages);
     setIsTyping(true);
 
@@ -315,6 +544,11 @@ export default function FloatingChatWidget() {
       if (replyText.match(calculatorRegex)) {
         replyText = replyText.replace(calculatorRegex, '').trim();
         widgetObj = 'calculator';
+      }
+      const quickFormRegex = /\[(W|В)IDGET:QUICK_FORM\]/gi;
+      if (replyText.match(quickFormRegex)) {
+        replyText = replyText.replace(quickFormRegex, '').trim();
+        widgetObj = 'quick_form';
       }
 
       setMessages(prev => [
@@ -395,6 +629,9 @@ export default function FloatingChatWidget() {
               {msg.widget === 'calculator' && (
                 <ChatCalculator lang={lang as 'uk' | 'en'} />
               )}
+              {msg.widget === 'quick_form' && (
+                <ChatQuickForm lang={lang as 'uk' | 'en'} />
+              )}
             </div>
           ))}
           {isTyping && (
@@ -408,6 +645,53 @@ export default function FloatingChatWidget() {
           )}
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Quick Replies chips */}
+        {!isTyping && (
+          <div className="chat-quick-replies" style={{
+            display: 'flex',
+            gap: '8px',
+            padding: '10px 15px',
+            background: 'rgba(10, 11, 20, 0.4)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+            overflowX: 'auto',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            whiteSpace: 'nowrap'
+          }}>
+            {QUICK_REPLIES[lang as 'uk' | 'en' || 'uk'].map((reply, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handleSendMessage(undefined, reply.query)}
+                style={{
+                  display: 'inline-block',
+                  padding: '6px 12px',
+                  borderRadius: '16px',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  color: 'var(--text-slate)',
+                  fontSize: '11px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseOver={e => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.borderColor = 'var(--color-blue)';
+                  e.currentTarget.style.color = 'white';
+                }}
+                onMouseOut={e => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.color = 'var(--text-slate)';
+                }}
+              >
+                {reply.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Input Bar */}
         <form className="chat-window-input-bar" onSubmit={handleSendMessage}>

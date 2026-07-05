@@ -34,6 +34,7 @@ export function Footer() {
             <li><Link href="/portfolio">{t.nav.portfolio}</Link></li>
             <li><Link href="/team">{t.nav.team}</Link></li>
             <li><Link href="/blog">{t.nav.blog}</Link></li>
+            <li><Link href="/web3">{t.nav.web3}</Link></li>
           </ul>
         </div>
 
