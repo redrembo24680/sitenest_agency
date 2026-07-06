@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ChevronRight, X, ExternalLink, TrendingUp, Users, Zap } from 'lucide-react';
 import { PORTFOLIO_PROJECTS } from '@/lib/data';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { MagneticButton } from '@/components/MagneticButton';
 
 const EXTENDED_PORTFOLIO = [
   {
@@ -157,9 +158,11 @@ export default function PortfolioClient() {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '4rem' }}>
-            <Link href="/contact" className="btn btn-primary">
-              {t.portfolio.orderSimilar} <ExternalLink className="btn-icon" />
-            </Link>
+            <MagneticButton>
+              <Link href="/contact" className="btn btn-primary">
+                {t.portfolio.orderSimilar} <ExternalLink className="btn-icon" />
+              </Link>
+            </MagneticButton>
           </div>
         </div>
       </section>
@@ -209,9 +212,11 @@ export default function PortfolioClient() {
                   );
                 })}
               </div>
-              <Link href="/contact" className="btn btn-primary">
-                {t.portfolio.orderSimilar} <ChevronRight className="btn-icon" aria-hidden="true" />
-              </Link>
+              <MagneticButton>
+                <Link href="/contact" className="btn btn-primary">
+                  {t.portfolio.orderSimilar} <ChevronRight className="btn-icon" aria-hidden="true" />
+                </Link>
+              </MagneticButton>
             </div>
           </div>
         </div>

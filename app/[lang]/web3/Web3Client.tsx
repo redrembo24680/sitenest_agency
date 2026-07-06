@@ -20,6 +20,7 @@ import confetti from 'canvas-confetti';
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { parseAbi } from 'viem';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { MagneticButton } from '@/components/MagneticButton';
 
 // Standard ERC-721 and Claim ABI
 const nftAbi = [
@@ -273,7 +274,6 @@ export default function Web3Client() {
                     />
                   </div>
                   <h3>{t.web3.cardTitle}</h3>
-                  <div className="nft-badge">ID: #0172</div>
                 </div>
                 
                 <div className="nft-footer">
@@ -420,29 +420,31 @@ export default function Web3Client() {
                 </ConnectButton.Custom>
 
                 {isWalletConnected && (
-                  <button 
-                    onClick={mintNFT}
-                    className={`btn btn-primary ${isMinted ? 'btn-disabled' : ''}`}
-                    style={{ width: '100%', marginTop: '1rem' }}
-                    disabled={isMinting || isMinted}
-                  >
-                    {isMinting ? (
-                      <>
-                        <RefreshCw className="btn-icon animate-spin" />
-                        <span>{mintStatusText}</span>
-                      </>
-                    ) : isMinted ? (
-                      <>
-                        <CheckCircle2 className="btn-icon" />
-                        <span>{t.web3.alreadyMinted}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="btn-icon" />
-                        <span>{t.web3.mintNft}</span>
-                      </>
-                    )}
-                  </button>
+                  <MagneticButton style={{ width: '100%', marginTop: '1rem' }} strength={0.12}>
+                    <button
+                      onClick={mintNFT}
+                      className={`btn btn-primary ${isMinted ? 'btn-disabled' : ''}`}
+                      style={{ width: '100%' }}
+                      disabled={isMinting || isMinted}
+                    >
+                      {isMinting ? (
+                        <>
+                          <RefreshCw className="btn-icon animate-spin" />
+                          <span>{mintStatusText}</span>
+                        </>
+                      ) : isMinted ? (
+                        <>
+                          <CheckCircle2 className="btn-icon" />
+                          <span>{t.web3.alreadyMinted}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="btn-icon" />
+                          <span>{t.web3.mintNft}</span>
+                        </>
+                      )}
+                    </button>
+                  </MagneticButton>
                 )}
               </div>
 

@@ -8,6 +8,7 @@ import { LogoIcon } from '@/components/LogoIcon';
 import { Testimonials } from '@/components/Testimonials';
 import { PORTFOLIO_PROJECTS } from '@/lib/data';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { MagneticButton } from '@/components/MagneticButton';
 
 // Animated counter hook
 function useCounter(target: number, duration = 1800) {
@@ -79,12 +80,16 @@ export default function HomeClient() {
             </h1>
             <p className="hero-desc">{t.home.heroDesc}</p>
             <div className="hero-actions">
-              <Link href="/services" className="btn btn-primary">
-                {t.home.ourServices} <ArrowRight className="btn-icon" />
-              </Link>
-              <Link href="/contact" className="btn btn-outline">
-                {t.home.orderProject}
-              </Link>
+              <MagneticButton>
+                <Link href="/services" className="btn btn-primary">
+                  {t.home.ourServices} <ArrowRight className="btn-icon" />
+                </Link>
+              </MagneticButton>
+              <MagneticButton>
+                <Link href="/contact" className="btn btn-outline">
+                  {t.home.orderProject}
+                </Link>
+              </MagneticButton>
             </div>
           </div>
 
@@ -240,9 +245,11 @@ export default function HomeClient() {
               {t.home.ctaTitle2}
             </h2>
             <p>{t.home.ctaDesc}</p>
-            <Link href="/contact" className="btn btn-primary">
-              {t.home.ctaBtn} <Send className="btn-icon" />
-            </Link>
+            <MagneticButton>
+              <Link href="/contact" className="btn btn-primary">
+                {t.home.ctaBtn} <Send className="btn-icon" />
+              </Link>
+            </MagneticButton>
           </div>
         </div>
       </section>

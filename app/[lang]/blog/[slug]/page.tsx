@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Link } from '@/components/Link';
 import Image from 'next/image';
@@ -8,6 +10,7 @@ import { translations } from '@/lib/i18n/translations';
 import { DocumentRenderer } from '@keystatic/core/renderer';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { MagneticButton } from '@/components/MagneticButton';
 
 interface BlogPostPageProps {
   params: Promise<{ lang: 'uk' | 'en'; slug: string }>;
@@ -138,9 +141,11 @@ export default async function BlogPostDetail({ params }: BlogPostPageProps) {
             </div>
 
             <div className="sidebar-widget">
-              <Link href="/blog" className="btn btn-outline" style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ArrowLeft className="btn-icon" style={{ transform: 'none', marginRight: '6px' }} /> {t.blog.backToBlog}
-              </Link>
+              <MagneticButton style={{ width: '100%' }}>
+                <Link href="/blog" className="btn btn-outline" style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ArrowLeft className="btn-icon" style={{ transform: 'none', marginRight: '6px' }} /> {t.blog.backToBlog}
+                </Link>
+              </MagneticButton>
             </div>
           </aside>
         </div>

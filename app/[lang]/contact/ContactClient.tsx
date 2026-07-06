@@ -5,6 +5,7 @@ import { Mail, MapPin, Send, Check, Loader2 } from 'lucide-react';
 import { FaqAccordionItem } from '@/components/FaqAccordionItem';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { sendContactEmail } from '@/app/actions/contact';
+import { MagneticButton } from '@/components/MagneticButton';
 
 export default function ContactClient() {
   const { t } = useLanguage();
@@ -201,13 +202,15 @@ export default function ContactClient() {
                   {formErrors.message && <span className="error-message" role="alert">{formErrors.message}</span>}
                 </div>
 
-                <button type="submit" className="btn btn-primary form-submit-btn" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>Надсилання... <Loader2 className="btn-icon animate-spin" /></>
-                  ) : (
-                    <>{t.contact.submitBtn} <Send className="btn-icon" /></>
-                  )}
-                </button>
+                <MagneticButton style={{ width: '100%' }} strength={0.12}>
+                  <button type="submit" className="btn btn-primary form-submit-btn" disabled={isSubmitting} style={{ width: '100%' }}>
+                    {isSubmitting ? (
+                      <>Надсилання... <Loader2 className="btn-icon animate-spin" /></>
+                    ) : (
+                      <>{t.contact.submitBtn} <Send className="btn-icon" /></>
+                    )}
+                  </button>
+                </MagneticButton>
               </form>
             ) : (
               <div className="form-success-state" style={{ display: 'block', opacity: 1 }}>
