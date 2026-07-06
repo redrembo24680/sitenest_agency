@@ -85,3 +85,47 @@ export async function sendContactEmail(formData: FormData) {
     return { success: false, message: 'Failed to send email' };
   }
 }
+
+export async function sendQuickLead(contactInfo: string) {
+  if (!contactInfo || !contactInfo.trim()) {
+    return { success: false, message: 'Contact info is required' };
+  }
+
+  // Create transporter
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER || 'sitenest.ua@gmail.com',
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER || 'sitenest.ua@gmail.com',
+      to: 'sitenest.ua@gmail.com',
+      subject: `Швидкий лід з чату: ${contactInfo}`,
+      html: `
+        <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e1e4e8; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <div style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); padding: 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.5px;">Швидкий лід з чату</h1>
+            <p style="color: #f3e8ff; margin: 8px 0 0 0; font-size: 14px;">Отримано нові контактні дані</p>
+          </div>
+          <div style="padding: 40px 30px;">
+            <p style="color: #1e293b; font-size: 16px; font-weight: 600;">Контактні дані:</p>
+            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; color: #0f172a; font-size: 18px; font-weight: bold; margin-bottom: 20px;">
+              ${contactInfo}
+            </div>
+            <p style="color: #64748b; font-size: 14px;">Цей лід був відправлений користувачем через швидку форму в інтерактивному чаті.</p>
+          </div>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending quick lead email:', error);
+    return { success: false, message: 'Failed to send lead' };
+  }
+}

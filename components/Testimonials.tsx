@@ -74,13 +74,34 @@ export const Testimonials: React.FC = () => {
 
   const scrollLeft = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -carouselRef.current.offsetWidth, behavior: 'smooth' });
+      const container = carouselRef.current;
+      const card = container.firstElementChild as HTMLElement;
+      if (card) {
+        const cardWidth = card.offsetWidth;
+        const style = window.getComputedStyle(container);
+        const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+        const step = cardWidth + gap;
+        const currentScroll = container.scrollLeft;
+        const target = Math.round((currentScroll - step) / step) * step;
+        container.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+      }
     }
   };
 
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: carouselRef.current.offsetWidth, behavior: 'smooth' });
+      const container = carouselRef.current;
+      const card = container.firstElementChild as HTMLElement;
+      if (card) {
+        const cardWidth = card.offsetWidth;
+        const style = window.getComputedStyle(container);
+        const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+        const step = cardWidth + gap;
+        const currentScroll = container.scrollLeft;
+        const target = Math.round((currentScroll + step) / step) * step;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        container.scrollTo({ left: Math.min(maxScroll, target), behavior: 'smooth' });
+      }
     }
   };
 
@@ -93,10 +114,6 @@ export const Testimonials: React.FC = () => {
         </h2>
 
         <div className="testimonials-carousel-wrapper">
-          <button className="carousel-nav-btn prev" onClick={scrollLeft} aria-label="Previous">
-            <ChevronLeft />
-          </button>
-          
           <div className="testimonials-carousel" ref={carouselRef}>
             {testimonials.map((current, i) => (
               <div key={i} className="testimonial-card glass-card">
@@ -118,9 +135,14 @@ export const Testimonials: React.FC = () => {
             ))}
           </div>
 
-          <button className="carousel-nav-btn next" onClick={scrollRight} aria-label="Next">
-            <ChevronRight />
-          </button>
+          <div className="testimonials-controls">
+            <button className="carousel-nav-btn prev" onClick={scrollLeft} aria-label="Previous">
+              <ChevronLeft />
+            </button>
+            <button className="carousel-nav-btn next" onClick={scrollRight} aria-label="Next">
+              <ChevronRight />
+            </button>
+          </div>
         </div>
       </div>
     </section>
