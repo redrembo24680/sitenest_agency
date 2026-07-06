@@ -334,12 +334,12 @@ export default function Web3Client() {
                 <div className="detail-row">
                   <span className="detail-label">{lang === 'en' ? 'Price' : 'Ціна'}</span>
                   <span className="detail-value text-green">
-                    {NFT_CONTRACT_ADDRESS ? (lang === 'en' ? 'Free Claim' : 'Безкоштовно') : (lang === 'en' ? 'Free (Simulation)' : 'Безкоштовно (Симуляція)')}
+                    {NFT_CONTRACT_ADDRESS ? '0.008 ETH' : (lang === 'en' ? 'Free (Simulation)' : 'Безкоштовно (Симуляція)')}
                   </span>
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">{lang === 'en' ? 'Limit' : 'Ліміт'}</span>
-                  <span className="detail-value">1 per wallet</span>
+                  <span className="detail-value">{NFT_CONTRACT_ADDRESS ? 'Limited' : '1 per wallet'}</span>
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">{lang === 'en' ? 'Network' : 'Мережа'}</span>
@@ -347,7 +347,9 @@ export default function Web3Client() {
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">{lang === 'en' ? 'Supply' : 'Доступно'}</span>
-                  <span className="detail-value">172 / 500</span>
+                  <span className="detail-value">
+                    {NFT_CONTRACT_ADDRESS ? '200' : '172 / 500'}
+                  </span>
                 </div>
                 
                 <div className="mint-perks-list">
