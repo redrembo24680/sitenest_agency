@@ -348,7 +348,7 @@ export default function Web3Client() {
                 <div className="detail-row">
                   <span className="detail-label">{lang === 'en' ? 'Supply' : 'Доступно'}</span>
                   <span className="detail-value">
-                    {NFT_CONTRACT_ADDRESS ? '200' : '172 / 500'}
+                    {NFT_CONTRACT_ADDRESS ? '200 / 200' : '172 / 500'}
                   </span>
                 </div>
                 
