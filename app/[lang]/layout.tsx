@@ -5,6 +5,7 @@ import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
+import { Web3Provider } from '@/components/Web3Provider';
 import '../globals.css';
 
 import { headers } from 'next/headers';
@@ -258,16 +259,18 @@ export default async function RootLayout({ children, params }: { children: React
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <LanguageProvider initialLang={lang as any}>
-          <div className="bg-grid" />
-          <div className="glow-orb glow-orb-1" />
-          <div className="glow-orb glow-orb-2" />
-          <div className="glow-orb glow-orb-3" />
-          <Header />
-          <main style={{ minHeight: '80vh' }}>
-            {children}
-          </main>
-          <Footer />
-          <FloatingChatWidget />
+          <Web3Provider>
+            <div className="bg-grid" />
+            <div className="glow-orb glow-orb-1" />
+            <div className="glow-orb glow-orb-2" />
+            <div className="glow-orb glow-orb-3" />
+            <Header />
+            <main style={{ minHeight: '80vh' }}>
+              {children}
+            </main>
+            <Footer />
+            <FloatingChatWidget />
+          </Web3Provider>
         </LanguageProvider>
       </body>
     </html>
