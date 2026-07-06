@@ -5,6 +5,7 @@ import { Link } from '@/components/Link';
 import { ArrowLeft, Check, ArrowRight } from 'lucide-react';
 import { FrontendVisual, BackendVisual, DevopsVisual, SmmVisual } from '@/components/ServiceCodeMockups';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { MagneticButton } from '@/components/MagneticButton';
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -131,13 +132,15 @@ export default function ServiceDetail({ params }: ServicePageProps) {
               <p style={{ color: 'var(--text-slate)', fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6' }}>
                 {t.serviceDetails.ctaDesc}
               </p>
-              <Link 
-                href="/contact"
-                className="btn btn-primary" 
-                style={{ width: '100%', padding: '1rem', display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} 
-              >
-                {t.serviceDetails.ctaBtn} <ArrowRight className="btn-icon" />
-              </Link>
+              <MagneticButton style={{ width: '100%' }}>
+                <Link 
+                  href="/contact"
+                  className="btn btn-primary" 
+                  style={{ width: '100%', padding: '1rem', display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} 
+                >
+                  {t.serviceDetails.ctaBtn} <ArrowRight className="btn-icon" />
+                </Link>
+              </MagneticButton>
             </div>
           </div>
         </div>

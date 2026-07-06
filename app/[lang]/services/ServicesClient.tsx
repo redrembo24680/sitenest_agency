@@ -5,6 +5,7 @@ import { Link } from '@/components/Link';
 import { Check, ArrowRight, Rocket, Award, Zap } from 'lucide-react';
 import { FrontendVisual, BackendVisual, DevopsVisual, SmmVisual } from '@/components/ServiceCodeMockups';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { MagneticButton } from '@/components/MagneticButton';
 
 export default function ServicesClient() {
   const { t, lang } = useLanguage();
@@ -77,9 +78,11 @@ export default function ServicesClient() {
               <li><Check /> {t.services.frontendBenefit2}</li>
               <li><Check /> {t.services.frontendBenefit3}</li>
             </ul>
-            <Link href="/services/frontend" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
-              {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
-            </Link>
+            <MagneticButton>
+              <Link href="/services/frontend" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
+                {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
+              </Link>
+            </MagneticButton>
           </div>
           <div className="service-detail-visual">
             <FrontendVisual />
@@ -103,9 +106,11 @@ export default function ServicesClient() {
               <li><Check /> {t.services.backendBenefit2}</li>
               <li><Check /> {t.services.backendBenefit3}</li>
             </ul>
-            <Link href="/services/backend" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
-              {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
-            </Link>
+            <MagneticButton>
+              <Link href="/services/backend" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
+                {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
+              </Link>
+            </MagneticButton>
           </div>
           <div className="service-detail-visual">
             <BackendVisual />
@@ -128,9 +133,11 @@ export default function ServicesClient() {
               <li><Check /> {t.services.devopsBenefit2}</li>
               <li><Check /> {t.services.devopsBenefit3}</li>
             </ul>
-            <Link href="/services/devops" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
-              {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
-            </Link>
+            <MagneticButton>
+              <Link href="/services/devops" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
+                {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
+              </Link>
+            </MagneticButton>
           </div>
           <div className="service-detail-visual">
             <DevopsVisual />
@@ -153,9 +160,11 @@ export default function ServicesClient() {
               <li><Check /> {t.services.smmBenefit2}</li>
               <li><Check /> {t.services.smmBenefit3}</li>
             </ul>
-            <Link href="/services/smm" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
-              {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
-            </Link>
+            <MagneticButton>
+              <Link href="/services/smm" className="btn btn-outline" style={{ marginTop: '1.75rem', padding: '0.65rem 1.6rem', fontSize: '0.85rem' }}>
+                {lang === 'uk' ? 'Детальніше про послугу' : 'Service Details'} <ArrowRight className="btn-icon" style={{ width: '14px', height: '14px' }} />
+              </Link>
+            </MagneticButton>
           </div>
           <div className="service-detail-visual">
             <SmmVisual />
@@ -269,9 +278,11 @@ export default function ServicesClient() {
               <div className="summary-title">{t.services.estimatedCost}</div>
               <div className="summary-price"><span>$</span>{animatedPrice}</div>
               <div className="summary-disclaimer">{t.services.disclaimer}</div>
-              <Link href="/contact" className="btn btn-primary">
-                {t.services.orderCalc} <ArrowRight className="btn-icon" />
-              </Link>
+              <MagneticButton>
+                <Link href="/contact" className="btn btn-primary">
+                  {t.services.orderCalc} <ArrowRight className="btn-icon" />
+                </Link>
+              </MagneticButton>
             </div>
           </div>
         </div>
