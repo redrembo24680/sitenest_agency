@@ -17,19 +17,83 @@ import {
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Link } from '@/components/Link';
 import confetti from 'canvas-confetti';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { parseAbi } from 'viem';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+// Standard ERC-721 and Claim ABI
+const nftAbi = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'owner', type: 'address' }],
+    outputs: [{ name: 'balance', type: 'uint256' }],
+  },
+  {
+    name: 'mint',
+    type: 'function',
+    stateMutability: 'payable',
+    inputs: [],
+    outputs: [],
+  },
+  {
+    name: 'claim',
+    type: 'function',
+    stateMutability: 'payable',
+    inputs: [
+      { name: 'receiver', type: 'address' },
+      { name: 'quantity', type: 'uint256' },
+      { name: 'currency', type: 'address' },
+      { name: 'pricePerToken', type: 'uint256' },
+      {
+        name: 'allowlistProof',
+        type: 'tuple',
+        components: [
+          { name: 'proof', type: 'bytes32[]' },
+          { name: 'quantityLimitPerAddress', type: 'uint256' },
+          { name: 'pricePerToken', type: 'uint256' },
+          { name: 'currency', type: 'address' },
+        ],
+      },
+      { name: 'data', type: 'bytes' },
+    ],
+    outputs: [],
+  },
+] as const;
+
+const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS || '';
 
 export default function Web3Client() {
   const { t, lang } = useLanguage();
   
-  // Web3 States
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState('');
-  const [isMinting, setIsMinting] = useState(false);
-  const [isMinted, setIsMinted] = useState(false);
-  const [mintStatusText, setMintStatusText] = useState('');
-  const [connectingWallet, setConnectingWallet] = useState(false);
-  const [artMode, setArtMode] = useState(false);
+  // Real Web3 States via Wagmi
+  const { address, isConnected } = useAccount();
+  const { writeContractAsync } = useWriteContract();
+
+  // Read balance from the real NFT contract if the address is configured
+  const { data: balanceData, refetch: refetchBalance } = useReadContract({
+    address: NFT_CONTRACT_ADDRESS as `0x${string}`,
+    abi: nftAbi,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!(NFT_CONTRACT_ADDRESS && address),
+    }
+  });
+
+  const nftBalance = balanceData ? Number(balanceData) : 0;
   
+  // Local simulated state fallback (if contract address is not set in env)
+  const [isSimulatedMinted, setIsSimulatedMinted] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintStatusText, setMintStatusText] = useState('');
+  const [artMode, setArtMode] = useState(false);
+
+  const isWalletConnected = isConnected;
+  const isMinted = NFT_CONTRACT_ADDRESS ? (nftBalance > 0) : isSimulatedMinted;
+  const walletAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '0x000...0000';
+
   // Interactive Calculator States
   const [selectedType, setSelectedType] = useState<'landing' | 'corporate' | 'ecommerce'>('corporate');
   const [devopsAddon, setDevopsAddon] = useState(false);
@@ -39,6 +103,17 @@ export default function Web3Client() {
   // 3D Card Hover Effect
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardRotate, setCardRotate] = useState({ x: 0, y: 0 });
+
+  // Refetch NFT balance automatically when user returns to this browser tab
+  useEffect(() => {
+    const handleFocus = () => {
+      if (isConnected && NFT_CONTRACT_ADDRESS) {
+        refetchBalance();
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [isConnected, refetchBalance]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -58,57 +133,61 @@ export default function Web3Client() {
     setCardRotate({ x: 0, y: 0 });
   };
 
-  // Wallet Connection Simulation
-  const connectWallet = () => {
-    if (isWalletConnected) {
-      // Disconnect
-      setIsWalletConnected(false);
-      setWalletAddress('');
-      setIsMinted(false);
-      return;
-    }
-    
-    setConnectingWallet(true);
-    setTimeout(() => {
-      setIsWalletConnected(true);
-      setWalletAddress('0x71C...3d82');
-      setConnectingWallet(false);
-    }, 1200);
-  };
-
-  // NFT Minting Simulation
-  const mintNFT = () => {
+  // NFT Minting or Claim execution
+  const mintNFT = async () => {
     if (!isWalletConnected || isMinted || isMinting) return;
     
-    setIsMinting(true);
-    
-    const steps = [
-      lang === 'en' ? 'Initializing transaction...' : 'Ініціалізація транзакції...',
-      lang === 'en' ? 'Minting NFT on Base network...' : 'Мінтинг NFT в мережі Base...',
-      lang === 'en' ? 'Confirming block...' : 'Підтвердження блоку...',
-      'Success!'
-    ];
+    if (!NFT_CONTRACT_ADDRESS) {
+      // Run simulation fallback
+      setIsMinting(true);
+      
+      const steps = [
+        lang === 'en' ? 'Initializing transaction...' : 'Ініціалізація транзакції...',
+        lang === 'en' ? 'Minting NFT on Base network...' : 'Мінтинг NFT в мережі Base...',
+        lang === 'en' ? 'Confirming block...' : 'Підтвердження блоку...',
+        'Success!'
+      ];
 
-    setMintStatusText(steps[0]);
+      setMintStatusText(steps[0]);
 
-    setTimeout(() => {
-      setMintStatusText(steps[1]);
       setTimeout(() => {
-        setMintStatusText(steps[2]);
+        setMintStatusText(steps[1]);
         setTimeout(() => {
-          setIsMinting(false);
-          setIsMinted(true);
-          setMintStatusText('');
-          
-          // Confetti celebration
-          confetti({
-            particleCount: 150,
-            spread: 80,
-            origin: { y: 0.6 }
-          });
+          setMintStatusText(steps[2]);
+          setTimeout(() => {
+            setIsMinting(false);
+            setIsSimulatedMinted(true);
+            setMintStatusText('');
+            
+            // Confetti celebration
+            confetti({
+              particleCount: 150,
+              spread: 80,
+              origin: { y: 0.6 }
+            });
+          }, 1000);
         }, 1000);
       }, 1000);
-    }, 1000);
+      return;
+    }
+
+    // Real Minting logic - Redirect to Manifold Page
+    try {
+      setIsMinting(true);
+      setMintStatusText(lang === 'en' ? 'Opening Manifold Page...' : 'Відкриття сторінки Manifold...');
+      
+      window.open('https://manifold.xyz/@sitenest/id/4031709424', '_blank');
+      
+      // Reset loading state after short delay
+      setTimeout(() => {
+        setIsMinting(false);
+        setMintStatusText('');
+      }, 2000);
+    } catch (err) {
+      console.error('Redirect failed:', err);
+      setIsMinting(false);
+      setMintStatusText('');
+    }
   };
 
   // Calculate project cost
@@ -237,9 +316,15 @@ export default function Web3Client() {
                   <h2>NFT Mint Station</h2>
                 </div>
                 <p>
-                  {lang === 'en' 
-                    ? 'Connect your wallet to claim your agency member pass. This is a secure simulation.' 
-                    : 'Підключіть свій гаманець, щоб отримати членську карту агентства. Це безпечна симуляція.'
+                  {NFT_CONTRACT_ADDRESS 
+                    ? (lang === 'en' 
+                        ? 'Connect your wallet to claim your agency member pass. VIP price will be activated immediately.' 
+                        : 'Підключіть свій гаманець, щоб отримати членську карту агентства. VIP-ціна активується миттєво.'
+                      )
+                    : (lang === 'en' 
+                        ? 'Connect your wallet to claim your agency member pass. This is a secure simulation.' 
+                        : 'Підключіть свій гаманець, щоб отримати членську карту агентства. Це безпечна симуляція.'
+                      )
                   }
                 </p>
               </div>
@@ -248,7 +333,9 @@ export default function Web3Client() {
               <div className="mint-details-panel">
                 <div className="detail-row">
                   <span className="detail-label">{lang === 'en' ? 'Price' : 'Ціна'}</span>
-                  <span className="detail-value text-green">{lang === 'en' ? 'Free (Simulation)' : 'Безкоштовно (Симуляція)'}</span>
+                  <span className="detail-value text-green">
+                    {NFT_CONTRACT_ADDRESS ? (lang === 'en' ? 'Free Claim' : 'Безкоштовно') : (lang === 'en' ? 'Free (Simulation)' : 'Безкоштовно (Симуляція)')}
+                  </span>
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">{lang === 'en' ? 'Limit' : 'Ліміт'}</span>
@@ -275,29 +362,60 @@ export default function Web3Client() {
               </div>
 
               <div className="wallet-actions">
-                <button 
-                  onClick={connectWallet}
-                  className={`btn ${isWalletConnected ? 'btn-outline' : 'btn-primary'}`}
-                  style={{ width: '100%' }}
-                  disabled={connectingWallet || isMinting}
-                >
-                  {connectingWallet ? (
-                    <>
-                      <RefreshCw className="btn-icon animate-spin" />
-                      {lang === 'en' ? 'Connecting...' : 'Підключення...'}
-                    </>
-                  ) : isWalletConnected ? (
-                    <>
-                      <Lock className="btn-icon" />
-                      {t.web3.disconnectWallet} ({walletAddress})
-                    </>
-                  ) : (
-                    <>
-                      <Wallet className="btn-icon" />
-                      {t.web3.connectWallet}
-                    </>
-                  )}
-                </button>
+                <ConnectButton.Custom>
+                  {({
+                    account,
+                    chain,
+                    openAccountModal,
+                    openChainModal,
+                    openConnectModal,
+                    authenticationStatus,
+                    mounted,
+                  }) => {
+                    const ready = mounted && authenticationStatus !== 'loading';
+                    const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated');
+
+                    return (
+                      <div
+                        {...(!ready && {
+                          'aria-hidden': true,
+                          'style': {
+                            opacity: 0,
+                            pointerEvents: 'none',
+                            userSelect: 'none',
+                          },
+                        })}
+                        style={{ width: '100%' }}
+                      >
+                        {(() => {
+                          if (!connected) {
+                            return (
+                              <button onClick={openConnectModal} type="button" className="btn btn-primary" style={{ width: '100%' }}>
+                                <Wallet className="btn-icon" />
+                                {t.web3.connectWallet}
+                              </button>
+                            );
+                          }
+
+                          if (chain.unsupported) {
+                            return (
+                              <button onClick={openChainModal} type="button" className="btn btn-primary" style={{ width: '100%', background: '#ff007f', borderColor: '#ff007f' }}>
+                                {lang === 'en' ? 'Wrong Network (Switch to Base)' : 'Неправильна мережа (Перемкніть на Base)'}
+                              </button>
+                            );
+                          }
+
+                          return (
+                            <button onClick={openAccountModal} type="button" className="btn btn-outline" style={{ width: '100%' }}>
+                              <Lock className="btn-icon" />
+                              {account.displayName} {account.displayBalance ? `(${account.displayBalance})` : ''}
+                            </button>
+                          );
+                        })()}
+                      </div>
+                    );
+                  }}
+                </ConnectButton.Custom>
 
                 {isWalletConnected && (
                   <button 
@@ -326,15 +444,27 @@ export default function Web3Client() {
                 )}
               </div>
 
-              <div className="simulation-disclaimer">
-                <ShieldCheck className="disclaimer-icon" />
-                <span>
-                  {lang === 'en' 
-                    ? 'Simulated environment. No real funds or transaction fees are required.' 
-                    : 'Демонстраційне середовище. Реальні кошти або комісії за транзакції не потрібні.'
-                  }
-                </span>
-              </div>
+              {NFT_CONTRACT_ADDRESS ? (
+                <div className="simulation-disclaimer live-badge" style={{ borderColor: 'rgba(0, 240, 255, 0.2)', background: 'rgba(0, 240, 255, 0.03)' }}>
+                  <ShieldCheck className="disclaimer-icon" style={{ color: 'var(--color-blue)' }} />
+                  <span style={{ color: 'var(--color-blue)' }}>
+                    {lang === 'en' 
+                      ? 'Live on Base Mainnet. Official audited smart contract.' 
+                      : 'Працює в мережі Base Mainnet. Офіційний смарт-контракт.'
+                    }
+                  </span>
+                </div>
+              ) : (
+                <div className="simulation-disclaimer">
+                  <ShieldCheck className="disclaimer-icon" />
+                  <span>
+                    {lang === 'en' 
+                      ? 'Simulated environment. No real funds or transaction fees are required.' 
+                      : 'Демонстраційне середовище. Реальні кошти або комісії за транзакції не потрібні.'
+                    }
+                  </span>
+                </div>
+              )}
             </div>
 
           </div>
